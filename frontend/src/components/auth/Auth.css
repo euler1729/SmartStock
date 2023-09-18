@@ -1,3 +1,4 @@
+
 .auth {
 
     display: flex;
@@ -100,7 +101,7 @@
 
 .input-field>input {
     padding: 10px;
-    border: 1px solid #0095ff8e;
+    border: 1px solid #7F00FF;
     background-color: transparent;
     border-radius: 3px;
     outline: none;

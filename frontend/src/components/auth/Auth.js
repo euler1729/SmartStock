@@ -21,7 +21,7 @@ function Auth() {
 
     React.useEffect(() => {
         setJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMjM0NTY3ODkwIiwiZW1haWwiOiJlbWFpbEBnbWFpbC5jb20iLCJleHAiOjd9.daHjrmUf0aq08-3IUuS3ZYYejqF-9OVSERaYq-XKQ8I");
-    },[]);
+    }, []);
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -36,7 +36,7 @@ function Auth() {
             console.log(decode);
             const cookies = new Cookies();
 
-            cookies.set('refresh_token', jwt, {expires: new Date(Date.now()+decode.exp*7*24*60*60*10000), path: '/'});
+            cookies.set('refresh_token', jwt, { expires: new Date(Date.now() + decode.exp * 7 * 24 * 60 * 60 * 10000), path: '/' });
             navigate('/');
             window.location.reload();
         }
@@ -63,37 +63,67 @@ function Auth() {
                     <div className='auth-login-container'>
                         {
                             register ? (
-                                <form>
+                                <form
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <div><h2>Sign Up</h2></div>
+
                                     <div className='input-field'>
                                         <p>Name</p>
                                         <input name='name' value={name} onChange={(e) => setName(e.target.value)} type="text" autoComplete='off' />
                                     </div>
                                     <div className='input-field'>
                                         <p>Email</p>
-                                        <input name='email' value={email} onChange={(e) => setEmail(e.target.value)} type="text" autoComplete='off'/>
+                                        <input name='email' value={email} onChange={(e) => setEmail(e.target.value)} type="text" autoComplete='off' />
                                     </div>
                                     <div className='input-field'>
                                         <p>Password</p>
-                                        <input name='password' value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete='off'/>
+                                        <input name='password' value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete='off' />
                                     </div>
                                     <div className='formBtn'>
-                                        <Button variant='contained' onClick={handleRegister} type='submit'>
+                                        <Button
+                                            style={{
+                                                backgroundColor: color.violet,
+                                                color: 'white'
+                                            }}
+                                            variant='contained'
+                                            onClick={handleRegister} type='submit'>
                                             {loading ? "Registering..." : "Register"}
                                         </Button>
                                     </div>
                                 </form>
                             ) : (
-                                <form>
+                                <form
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <div><h2>Sign In</h2></div>
                                     <div className='input-field'>
                                         <p>Email</p>
-                                        <input name='email' value={email} onChange={(e) => setEmail(e.target.value)} type="text" autoComplete='on'/>
+                                        <input name='email' value={email} onChange={(e) => setEmail(e.target.value)} type="text" autoComplete='on' />
                                     </div>
                                     <div className='input-field'>
                                         <p>Password</p>
                                         <input name='password' value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete='on' />
                                     </div>
                                     <div className='formBtn'>
-                                        <Button variant='contained' onClick={handleSignIn} type='submit'>
+                                        <Button
+                                            style={{
+                                                backgroundColor: color.violet,
+                                                color: 'white'
+                                            }}
+                                            variant='contained'
+                                            onClick={handleSignIn}
+                                            type='submit'>
                                             {
                                                 loading ? "Logging In..." : "Login"
                                             }
@@ -125,7 +155,7 @@ function Auth() {
                         }}>{error}</p>
                 }
             </div>
-        </div>
+        </div >
     )
 }
 
