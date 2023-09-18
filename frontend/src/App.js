@@ -12,10 +12,10 @@ import Auth from './components/auth/Auth';
 import Portfolio from './components/portfolio/Portfolio';
 import Account from './components/account/Account';
 import EditProfile from './components/account/EditProfile';
+import Cookies from 'universal-cookie';
+
 
 function App() {
-  const [refresh_token, setRefreshToken] = React.useState(null);
-  const [access_token, setAccessToken] = React.useState(null);
 
   useEffect(() => {
 
@@ -56,12 +56,16 @@ function App() {
 }
 
 const HomeX = () => {
-  const refresh_token = localStorage.getItem('refresh_token');
+  const refresh_token = new Cookies().get('refresh_token');
+  console.log(refresh_token);
   return refresh_token ? <Home /> : <HomeCommon />;
 }
 const Protected = () => {
-  const refresh_token = localStorage.getItem('refresh_token');
+  const refresh_token = new Cookies().get('refresh_token');
+  console.log(refresh_token)
   return refresh_token ? <Outlet /> : <Navigate to="/auth" />;
 }
+
+
 
 export default App;

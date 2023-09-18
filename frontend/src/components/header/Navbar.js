@@ -7,23 +7,28 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { Link } from 'react-router-dom';
-import { Tune } from '@mui/icons-material';
-
+import LoginIcon from '@mui/icons-material/Login';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { color } from '../../color'
+import Cookies from 'universal-cookie';
 
 function Navbar() {
+    const cookies = new Cookies();
+    const [refresh_token, setRefreshToken] = React.useState(cookies.get('refresh_token'));
+
     const routes = ['Home', 'Market', 'Watchlist', 'Portfolio'];
     const route_link = ['/', '/market', '/watchlist', '/portfolio'];
-    const settings = ['Account', 'Edit Profile'];
-    const settings_link = ['/account', '/edit-profile'];
+    const settings = ['Account', 'Edit Profile', 'Logout'];
+    const settings_link = ['/account', '/edit-profile', '/'];
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -36,12 +41,29 @@ function Navbar() {
         setAnchorElNav(null);
     };
 
-    const handleCloseUserMenu = () => {
+    const handleCloseUserMenu = (e) => {
+        console.log(e);
+        if (e === 2) {
+            handleLogout();
+        }
         setAnchorElUser(null);
     };
 
+    const handleLogout = () => {
+        setAnchorElUser(null);
+        setRefreshToken(null);
+        cookies.remove('refresh_token');
+    }
+
     return (
-        <AppBar position="static">
+        <AppBar position="static" style={{
+            backgroundColor: color.navy,
+            opacity: 0.9,
+            borderRadius: '10px',
+            boxShadow: '0px 0px 30px 0px rgba(0,0,0,0.75)',
+            margin:'4px',
+            width:'calc(100% - 10px)'
+        }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
@@ -58,6 +80,7 @@ function Navbar() {
                             letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
+                            fontSize: '1.5rem'
                         }}
                     >
                         |SMART🗠STOCK|
@@ -118,11 +141,12 @@ function Navbar() {
                             letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
+                            fontSize: '1em'
                         }}
                     >
                         |SMART🗠STOCK|
                     </Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent:'center' }}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
                         {routes.map((page, i) => (
                             <MenuItem
                                 component="a"
@@ -133,36 +157,52 @@ function Navbar() {
                             </MenuItem>
                         ))}
                     </Box>
-
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Profile" src="/static/images/avatar/2.jpg" />
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting, i) => (
-                                <MenuItem component="a" href={settings_link[i]} key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
+                    {
+                        refresh_token ?
+                            <Box sx={{ flexGrow: 0 }}>
+                                <Tooltip title="Open settings">
+                                    <IconButton onClick={handleOpenUserMenu} >
+                                        <AccountCircleIcon sx={{ color: 'white' }} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    {settings.map((setting, i) => (
+                                        <MenuItem
+                                            component="a"
+                                            href={settings_link[i]}
+                                            key={setting}
+                                            onClick={() => handleCloseUserMenu(i)}>
+                                            {i==0 && <AccountBoxIcon sx={{ mr: 1 }} />}
+                                            {i==1 && <ManageAccountsIcon sx={{ mr: 1 }} />}
+                                            {i==2 && <LogoutIcon sx={{ mr: 1 }} />}
+                                            <Typography textAlign="center">{setting}</Typography>
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </Box>
+                            :
+                            <Box sx={{ flexGrow: 0 }}>
+                                <MenuItem component="a" href="/auth" key="Login" onClick={handleCloseNavMenu}>
+                                    Login
+                                    <LoginIcon sx={{ ml: 1 }} />
                                 </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
+                            </Box>
+                    }
                 </Toolbar>
             </Container>
         </AppBar>
