@@ -1,0 +1,66 @@
+/* Navigation bar styles */
+.navbar {
+    background-color: hsl(345, 48%, 49%);
+    color: #EEE6CE;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+    margin: auto;
+    justify-content: space-between;
+    /* align-items: center; */
+}
+.nav-left {
+    display: flex;
+    margin: auto;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.nav-center{
+    display: flex;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav-right {
+    display: flex;
+    margin: auto;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.menu-button {
+    margin-right: 16px;
+}
+
+.logo {
+    flex-grow: 1;
+    font-weight: bold;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    padding: 0;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #EEE6CE;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #2EB086;
+}
+
+.profile {
+    color: #EEE6CE;
+    margin-left: 16px;
+}
+
+.profile:hover {
+    color: #2EB086;
+}
