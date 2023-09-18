@@ -1,48 +1,170 @@
-import React from 'react';
-import './Navbar.css'; // Import the CSS file for styling
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
+import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import AdbIcon from '@mui/icons-material/Adb';
+import { Link } from 'react-router-dom';
+import { Tune } from '@mui/icons-material';
+
 
 function Navbar() {
-    return (
-        <AppBar position="static" className="navbar">
-            <Toolbar>
-                <div className='nav-left'>
-                    <Typography variant="h6" className="logo">
-                        <IconButton>
-                            <ShowChartIcon />
-                        </IconButton>
-                    </Typography>
-                </div>
-                <div className='nav-center'>
-                    <div className="nav-links">
-                        <a href="/market" className="nav-link">
-                            Market
-                        </a>
-                        <a href="/about" className="nav-link">
-                            About
-                        </a>
-                        <a href="/portfolio" className="nav-link">
-                            Portfolio
-                        </a>
-                        <a href="/contact" className="nav-link">
-                            Contact
-                        </a>
-                    </div>
-                </div>
-                <div className='nav-right'>
-                    <div className="profile">
-                        <IconButton color="inherit">
-                            <AccountCircleIcon />
-                        </IconButton>
-                    </div>
-                </div>
+    const routes = ['Home', 'Market', 'Watchlist', 'Portfolio'];
+    const route_link = ['/', '/market', '/watchlist', '/portfolio'];
+    const settings = ['Account', 'Edit Profile'];
+    const settings_link = ['/account', '/edit-profile'];
 
-            </Toolbar>
+    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+    const handleOpenNavMenu = (event) => {
+        setAnchorElNav(event.currentTarget);
+    };
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+
+    return (
+        <AppBar position="static">
+            <Container maxWidth="xl">
+                <Toolbar disableGutters>
+                    {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="a"
+                        href="/"
+                        sx={{
+                            mr: 2,
+                            display: { xs: 'none', md: 'flex' },
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        |SMART🗠STOCK|
+                    </Typography>
+
+                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                        <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleOpenNavMenu}
+                            color="inherit"
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorElNav}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
+                            open={Boolean(anchorElNav)}
+                            onClose={handleCloseNavMenu}
+                            sx={{
+                                display: { xs: 'block', md: 'none' },
+                            }}
+                        >
+                            {routes.map((page, i) => (
+                                <MenuItem
+                                    component="a"
+                                    href={route_link[i]}
+                                    key={i}
+                                    onClick={handleCloseNavMenu}>
+                                    <Typography href={route_link[i]} textAlign="center">{page}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                    </Box>
+                    {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+                    <Typography
+                        variant="h5"
+                        noWrap
+                        component="a"
+                        href="/"
+                        sx={{
+                            mr: 2,
+                            display: { xs: 'flex', md: 'none' },
+                            flexGrow: 1,
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        |SMART🗠STOCK|
+                    </Typography>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent:'center' }}>
+                        {routes.map((page, i) => (
+                            <MenuItem
+                                component="a"
+                                href={route_link[i]}
+                                key={i}
+                                onClick={handleCloseNavMenu}>
+                                <Typography href={route_link[i]} textAlign="center">{page}</Typography>
+                            </MenuItem>
+                        ))}
+                    </Box>
+
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="Profile" src="/static/images/avatar/2.jpg" />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            {settings.map((setting, i) => (
+                                <MenuItem component="a" href={settings_link[i]} key={setting} onClick={handleCloseUserMenu}>
+                                    <Typography textAlign="center">{setting}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                    </Box>
+                </Toolbar>
+            </Container>
         </AppBar>
     );
 }
