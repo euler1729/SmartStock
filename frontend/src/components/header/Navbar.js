@@ -16,6 +16,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { color } from '../../color'
 import Cookies from 'universal-cookie';
+import { Gradient } from '@mui/icons-material';
 
 function Navbar() {
     const cookies = new Cookies();
@@ -57,12 +58,12 @@ function Navbar() {
 
     return (
         <AppBar position="static" style={{
-            backgroundColor: color.navy,
+            backgroundColor: color.violet,
             opacity: 0.9,
             borderRadius: '10px',
             boxShadow: '0px 0px 30px 0px rgba(0,0,0,0.75)',
-            margin:'4px',
-            width:'calc(100% - 10px)'
+            margin: '4px',
+            width: 'calc(100% - 10px)'
         }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
@@ -159,14 +160,18 @@ function Navbar() {
                     </Box>
                     {
                         refresh_token ?
-                            <Box sx={{ flexGrow: 0 }}>
+                            <Box sx={{
+                                flexGrow: 0,
+                            }}>
                                 <Tooltip title="Open settings">
                                     <IconButton onClick={handleOpenUserMenu} >
                                         <AccountCircleIcon sx={{ color: 'white' }} />
                                     </IconButton>
                                 </Tooltip>
                                 <Menu
-                                    sx={{ mt: '45px' }}
+                                    sx={{
+                                        mt: '45px',
+                                    }}
                                     id="menu-appbar"
                                     anchorEl={anchorElUser}
                                     anchorOrigin={{
@@ -181,18 +186,24 @@ function Navbar() {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    {settings.map((setting, i) => (
-                                        <MenuItem
-                                            component="a"
-                                            href={settings_link[i]}
-                                            key={setting}
-                                            onClick={() => handleCloseUserMenu(i)}>
-                                            {i==0 && <AccountBoxIcon sx={{ mr: 1 }} />}
-                                            {i==1 && <ManageAccountsIcon sx={{ mr: 1 }} />}
-                                            {i==2 && <LogoutIcon sx={{ mr: 1 }} />}
-                                            <Typography textAlign="center">{setting}</Typography>
-                                        </MenuItem>
-                                    ))}
+                                    <div style={{
+                                        backgroundColor: 'linear-Gradient(to right, #16224A, #FFFFFF)',
+                                    }}>
+
+
+                                        {settings.map((setting, i) => (
+                                            <MenuItem
+                                                component="a"
+                                                href={settings_link[i]}
+                                                key={setting}
+                                                onClick={() => handleCloseUserMenu(i)}>
+                                                {i == 0 && <AccountBoxIcon sx={{ mr: 1 }} />}
+                                                {i == 1 && <ManageAccountsIcon sx={{ mr: 1 }} />}
+                                                {i == 2 && <LogoutIcon sx={{ mr: 1 }} />}
+                                                <Typography textAlign="center">{setting}</Typography>
+                                            </MenuItem>
+                                        ))}
+                                    </div>
                                 </Menu>
                             </Box>
                             :
