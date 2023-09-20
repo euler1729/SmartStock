@@ -50,6 +50,7 @@ function Auth() {
             setLoading(false);
             return;
         } else {
+            setLoading(false);
             setRegister(false);
         }
     }

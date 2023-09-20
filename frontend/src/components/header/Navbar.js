@@ -14,16 +14,21 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 import { color } from '../../color'
 import Cookies from 'universal-cookie';
-import { Gradient } from '@mui/icons-material';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import SavedSearchIcon from '@mui/icons-material/SavedSearch';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import InsightsIcon from '@mui/icons-material/Insights';
 
 function Navbar() {
     const cookies = new Cookies();
     const [refresh_token, setRefreshToken] = React.useState(cookies.get('refresh_token'));
 
-    const routes = ['Home', 'Market', 'Watchlist', 'Portfolio'];
-    const route_link = ['/', '/market', '/watchlist', '/portfolio'];
+    const routes = ['Home', 'Market', 'Watchlist', 'Portfolio', 'Analytics'];
+    const route_link = ['/', '/market', '/watchlist', '/portfolio', '/analytics'];
     const settings = ['Account', 'Edit Profile', 'Logout'];
     const settings_link = ['/account', '/edit-profile', '/'];
 
@@ -84,7 +89,7 @@ function Navbar() {
                             fontSize: '1.5rem'
                         }}
                     >
-                        |SMART🗠STOCK|
+                        |SMART{<AutoGraphIcon />}STOCK|
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -118,11 +123,19 @@ function Navbar() {
                         >
                             {routes.map((page, i) => (
                                 <MenuItem
+                                    sx={{
+
+                                    }}
                                     component="a"
                                     href={route_link[i]}
                                     key={i}
                                     onClick={handleCloseNavMenu}>
-                                    <Typography href={route_link[i]} textAlign="center">{page}</Typography>
+                                    {(i == 0) && <HomeIcon sx={{ mr: 1, color: color.violet }} />}
+                                    {i == 1 && <QueryStatsIcon sx={{ mr: 1, color: color.violet }} />}
+                                    {i == 2 && <SavedSearchIcon sx={{ mr: 1, color: color.violet }} />}
+                                    {i == 3 && <InsightsIcon sx={{ mr: 1, color: color.violet }} />}
+                                    {i == 4 && <AnalyticsIcon sx={{ mr: 1, color: color.violet }} />}
+                                    <Typography href={route_link[i]} textAlign="center" fontWeight={700}>{page}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -154,7 +167,12 @@ function Navbar() {
                                 href={route_link[i]}
                                 key={i}
                                 onClick={handleCloseNavMenu}>
-                                <Typography href={route_link[i]} textAlign="center">{page}</Typography>
+                                {(i == 0) && <HomeIcon sx={{ mr: 1, color: color.white }} />}
+                                {i == 1 && <QueryStatsIcon sx={{ mr: 1, color: color.white }} />}
+                                {i == 2 && <SavedSearchIcon sx={{ mr: 1, color: color.white }} />}
+                                {i == 3 && <InsightsIcon sx={{ mr: 1, color: color.white }} />}
+                                {i == 4 && <AnalyticsIcon sx={{ mr: 1, color: color.white }} />}
+                                <Typography href={route_link[i]} textAlign="center" fontWeight={700}>{page}</Typography>
                             </MenuItem>
                         ))}
                     </Box>
@@ -197,10 +215,10 @@ function Navbar() {
                                                 href={settings_link[i]}
                                                 key={setting}
                                                 onClick={() => handleCloseUserMenu(i)}>
-                                                {i == 0 && <AccountBoxIcon sx={{ mr: 1 }} />}
-                                                {i == 1 && <ManageAccountsIcon sx={{ mr: 1 }} />}
-                                                {i == 2 && <LogoutIcon sx={{ mr: 1 }} />}
-                                                <Typography textAlign="center">{setting}</Typography>
+                                                {i == 0 && <AccountBoxIcon sx={{ mr: 1, color: color.violet }} />}
+                                                {i == 1 && <ManageAccountsIcon sx={{ mr: 1, color: color.violet }} />}
+                                                {i == 2 && <LogoutIcon sx={{ mr: 1, color: color.violet }} />}
+                                                <Typography textAlign="center" fontWeight={700}>{setting}</Typography>
                                             </MenuItem>
                                         ))}
                                     </div>
@@ -208,8 +226,8 @@ function Navbar() {
                             </Box>
                             :
                             <Box sx={{ flexGrow: 0 }}>
-                                <MenuItem component="a" href="/auth" key="Login" onClick={handleCloseNavMenu}>
-                                    Login
+                                <MenuItem component="a" href="/auth" key="Login" fontWeight={700} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center" fontWeight={700}>Login</Typography>
                                     <LoginIcon sx={{ ml: 1 }} />
                                 </MenuItem>
                             </Box>
