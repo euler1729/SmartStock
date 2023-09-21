@@ -1,5 +1,6 @@
 package com.example.backend.services;
 
+import com.example.backend.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -43,10 +44,14 @@ public class JwtService {
         byte [] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User userDetails) {
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getRole());
+        claims.put("uid", userDetails.getUid());
+        claims.put("name", userDetails.getName());
+        return generateToken(claims, userDetails);
     }
-    public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String,Object> extraClaims, User userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())

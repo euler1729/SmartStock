@@ -23,7 +23,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "uid", nullable = false, unique = true)
-    private Long uid;
+    private int uid;
     @Column(name = "name")
     private String name;
     @Column(name = "email", nullable = false, unique = true)

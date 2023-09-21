@@ -22,18 +22,38 @@ import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import InsightsIcon from '@mui/icons-material/Insights';
+import jwtDecode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
     const cookies = new Cookies();
-    const [refresh_token, setRefreshToken] = React.useState(cookies.get('refresh_token'));
+    const [refresh_token, setRefreshToken] = React.useState(null);
+    const [settings, setSettings] = React.useState(['Account', 'Edit Profile', 'Logout']);
+
 
     const routes = ['Home', 'Market', 'Watchlist', 'Portfolio', 'Analytics'];
     const route_link = ['/', '/market', '/watchlist', '/portfolio', '/analytics'];
-    const settings = ['Account', 'Edit Profile', 'Logout'];
     const settings_link = ['/account', '/edit-profile', '/'];
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+    React.useEffect(() => {
+        setRefreshToken(cookies.get('refresh_token'));
+        if (refresh_token) {
+            const decode = jwtDecode(refresh_token);
+            const d = new Date();
+            if (decode.exp < d.getMilliseconds()) {
+                cookies.remove('refresh_token');
+                setRefreshToken(null);
+                window.location.reload();
+            }else{
+                // console.log(decode);
+                setSettings([decode.name, 'Edit Profile', 'Logout']);
+            }
+        }
+
+    }, [refresh_token]);
 
 
     const handleOpenNavMenu = (event) => {
@@ -59,6 +79,7 @@ function Navbar() {
         setAnchorElUser(null);
         setRefreshToken(null);
         cookies.remove('refresh_token');
+        window.location.reload();
     }
 
     return (

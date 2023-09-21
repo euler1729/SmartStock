@@ -13,15 +13,10 @@ import Portfolio from './components/portfolio/Portfolio';
 import Account from './components/account/Account';
 import EditProfile from './components/account/EditProfile';
 import Cookies from 'universal-cookie';
+import jwtDecode from 'jwt-decode';
 
 
 function App() {
-
-  useEffect(() => {
-
-  }, []);
-
-
 
   return (
     <div className='App'>
@@ -46,7 +41,7 @@ function App() {
             <Route path='/account' element={<Account />} />
           </Route>
           <Route path='/edit-profile' element={<Protected />} >
-            <Route path='/edit-profile' element={<EditProfile/>} />
+            <Route path='/edit-profile' element={<EditProfile />} />
           </Route>
           <Route path='/auth' element={<Auth />} />
         </Routes>
@@ -58,12 +53,30 @@ function App() {
 const HomeX = () => {
   const refresh_token = new Cookies().get('refresh_token');
   console.log(refresh_token);
-  return refresh_token ? <Home /> : <HomeCommon />;
+  if(refresh_token){
+    const decode = jwtDecode(refresh_token);
+    const d = new Date();
+    if(decode.exp >d.getMilliseconds()){
+      return <Home />;
+    }
+    new Cookies().remove('refresh_token');
+    return <HomeCommon />;
+  }
+  return <HomeCommon />;
 }
 const Protected = () => {
   const refresh_token = new Cookies().get('refresh_token');
   console.log(refresh_token)
-  return refresh_token ? <Outlet /> : <Navigate to="/auth" />;
+  if (refresh_token) {
+    const decode = jwtDecode(refresh_token);
+    const d = new Date();
+    if (decode.exp >d.getMilliseconds()) {
+      return <Outlet />;
+    }
+    new Cookies().remove('refresh_token');
+    return <Navigate to="/auth" />;
+  }
+  return <Navigate to="/auth" />;
 }
 
 

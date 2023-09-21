@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,8 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
+import java.util.Arrays;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -29,16 +34,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-
+        System.out.println(request);
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String email;
 
+        System.out.println("authHeader: " + authHeader);
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
         } else {
-            jwt = authHeader.substring(7);
-            email = jwtService.extractUsername(jwt);
+            final String jwt = authHeader.substring(7);
+            final String email = jwtService.extractUsername(jwt);
             if(email!=null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 if(jwtService.isTokenValid(jwt, userDetails)) {

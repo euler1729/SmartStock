@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import { color } from '../../color';
 import Cookies from 'universal-cookie';
 import jwtDecode from 'jwt-decode';
+import api from '../../API';
 
 function Auth() {
     const [register, setRegister] = React.useState(false);
@@ -14,13 +15,25 @@ function Auth() {
     const [name, setName] = React.useState('');
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
-    const [jwt, setJwt] = React.useState('');
     const navigate = useNavigate();
     const cookies = new Cookies();
 
 
     React.useEffect(() => {
-        setJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxMjM0NTY3ODkwIiwiZW1haWwiOiJlbWFpbEBnbWFpbC5jb20iLCJleHAiOjd9.daHjrmUf0aq08-3IUuS3ZYYejqF-9OVSERaYq-XKQ8I");
+        const refresh_token = cookies.get('refresh_token');
+        if (refresh_token) {
+            const decode = jwtDecode(refresh_token);
+            console.log(decode);
+            const d = new Date();
+            if (decode.exp < d.getMilliseconds()) {
+                cookies.remove('refresh_token');
+            } else {
+                navigate('/');
+                // window.location.reload();
+            }
+        }else{
+            console.log("No refresh token");
+        }
     }, []);
 
     const handleSignIn = (e) => {
@@ -28,17 +41,31 @@ function Auth() {
         setError('');
         setLoading(true);
         if (email === '' || password === '') {
-            setError('Please fill all the fields');
+            if(email==='') setError('Email can not be empty\n');
+            if(password==='') setError('Password can not be empty\n');
             setLoading(false);
             return;
         } else {
-            const decode = jwtDecode(jwt);
-            console.log(decode);
-            const cookies = new Cookies();
-
-            cookies.set('refresh_token', jwt, { expires: new Date(Date.now() + decode.exp * 7 * 24 * 60 * 60 * 10000), path: '/' });
-            navigate('/');
-            window.location.reload();
+            api.post('/auth/authenticate', {
+                email: email,
+                password: password
+            }).then(res => {
+                console.log(res.data);
+                if (res.status < 300) {
+                    const decode = jwtDecode(res.data.token);
+                    console.log(decode);
+                    cookies.set('refresh_token', res.data.token, { path: '/' });
+                    navigate('/');
+                    window.location.reload();
+                } else {
+                    setError("Wrong Credentials");
+                    setLoading(false);
+                }
+            }).catch(err => {
+                console.log(err);
+                setError("Wrong Credentials");
+                setLoading(false);
+            })
         }
     }
     const handleRegister = (e) => {
@@ -50,15 +77,41 @@ function Auth() {
             setLoading(false);
             return;
         } else {
-            setLoading(false);
-            setRegister(false);
+            api.post('/auth/register', {
+                name: name,
+                email: email,
+                password: password
+            }).then(res => {
+                console.log(res.data);
+                if (res.status < 300) {
+                    const decode = jwtDecode(res.data.refresh_token);
+                    console.log(decode);
+                    cookies.set('refresh_token', res.data.refresh_token, { path: '/' });
+                    navigate('/');
+                    window.location.reload();
+                } else {
+                    setError("Probably duplicate email!");
+                    setLoading(false);
+                }
+            }).catch(err => {
+                console.log(err);
+                setError("Proabably duplicate email!");
+                setLoading(false);
+            })
         }
     }
 
     return (
         <div className='auth'>
             <div className='auth-container'>
-
+                {
+                    error !== '' && <p
+                        style={{
+                            color: 'red',
+                            justifyContent: "center",
+                            fontSize: "15px"
+                        }}>{error}</p>
+                }
                 {/*Login and Register Form*/}
                 <div className='auth-login'>
                     <div className='auth-login-container'>
@@ -147,14 +200,6 @@ function Auth() {
                     </div>
                 </div>
 
-                {
-                    error !== '' && <p
-                        style={{
-                            color: 'red',
-                            justifyContent: "center",
-                            fontSize: "15px"
-                        }}>{error}</p>
-                }
             </div>
         </div >
     )
