@@ -19,8 +19,7 @@
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 
-
-/backend/.env
+backend/.env
 /backend/target
 /backend/backend.iml
 
