@@ -47,7 +47,7 @@ function Auth() {
             return;
         } else {
             api.post('/auth/authenticate', {
-                email: email,
+                email: email.toLowerCase(),
                 password: password
             }).then(res => {
                 console.log(res.data);
@@ -79,14 +79,14 @@ function Auth() {
         } else {
             api.post('/auth/register', {
                 name: name,
-                email: email,
+                email: email.toLowerCase(),
                 password: password
             }).then(res => {
                 console.log(res.data);
                 if (res.status < 300) {
-                    const decode = jwtDecode(res.data.refresh_token);
+                    const decode = jwtDecode(res.data.token);
                     console.log(decode);
-                    cookies.set('refresh_token', res.data.refresh_token, { path: '/' });
+                    cookies.set('refresh_token', res.data.token, { path: '/' });
                     navigate('/');
                     window.location.reload();
                 } else {

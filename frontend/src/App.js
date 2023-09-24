@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes, Outlet, Navigate } from 'react-
 
 import Navbar from './components/header/Navbar';
 import HomeCommon from './components/home/HomeCommon';
-import Home from './components/home/Home';
 import Market from './components/market/Market';
 import Watchlist from './components/watchlist/Watchlist';
 import Auth from './components/auth/Auth';
@@ -24,7 +23,7 @@ function App() {
       <Router>
         <Routes>
 
-          <Route path='/' element={<HomeX />} />
+          <Route path='/' element={<HomeCommon/>} />
 
           <Route path='/market' element={<Protected />} >
             <Route path='/market' element={<Market />} />
@@ -50,20 +49,6 @@ function App() {
   );
 }
 
-const HomeX = () => {
-  const refresh_token = new Cookies().get('refresh_token');
-  console.log(refresh_token);
-  if(refresh_token){
-    const decode = jwtDecode(refresh_token);
-    const d = new Date();
-    if(decode.exp >d.getMilliseconds()){
-      return <Home />;
-    }
-    new Cookies().remove('refresh_token');
-    return <HomeCommon />;
-  }
-  return <HomeCommon />;
-}
 const Protected = () => {
   const refresh_token = new Cookies().get('refresh_token');
   console.log(refresh_token)

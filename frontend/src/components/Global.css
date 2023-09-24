@@ -1,7 +1,49 @@
-.center{
+.center {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: auto;
+}
+
+.flex-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.flex-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: start;
+}
+
+.box {
+    border-radius: 10px;
+    margin-top: 1rem;
+    width: 50%;
+    height: 150px;
+    padding: 10px 10px 10px 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    /* Box Shadow */
+    box-shadow: 1px 1px 10px 0px #7F00FF;
+}
+
+.padding {
+    padding: 5px;
+}
+
+.normal {
+    font-weight: normal;
+}
+
+.thick {
+    font-weight: bold;
+}
+
+.thicker {
+    font-weight: 900;
 }

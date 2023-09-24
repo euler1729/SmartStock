@@ -24,7 +24,7 @@ public class AuthService {
     public AuthRes register(RegisterReq request) {
         var user = User.builder()
                 .name(request.getName())
-                .email(request.getEmail())
+                .email(request.getEmail().toLowerCase())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();

@@ -83,7 +83,7 @@ function Navbar() {
     }
 
     return (
-        <AppBar position="static" style={{
+        <AppBar position="sticky" style={{
             backgroundColor: color.violet,
             opacity: 0.9,
             borderRadius: '10px',
@@ -107,7 +107,7 @@ function Navbar() {
                             letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
-                            fontSize: '1.5rem'
+                            fontSize: '1.5vw'
                         }}
                     >
                         |SMART{<AutoGraphIcon />}STOCK|
@@ -176,10 +176,11 @@ function Navbar() {
                             letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
-                            fontSize: '1em'
+                            fontSize: '3vw',
+                            size: '3vw'
                         }}
                     >
-                        |SMART🗠STOCK|
+                        |SMART{<AutoGraphIcon sx={{size: '3vw'}}/>}STOCK|
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
                         {routes.map((page, i) => (

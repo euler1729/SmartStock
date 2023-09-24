@@ -22,7 +22,7 @@ const Account = () => {
             // console.log(decode);
             const req = {
                 uid: decode.uid,
-                email: decode.sub
+                email: decode.sub.toLowerCase()
             }
             if (decode.exp < (new Date()).getMilliseconds()) {
                 new Cookies().remove('refresh_token');
