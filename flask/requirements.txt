@@ -1,5 +1,0 @@
-flask
-flask-restful
-python-dotenv
-psycopg2-binary
-

@@ -1,0 +1,7 @@
+flask
+flask-restful
+python-dotenv
+psycopg2-binary
+pandas 
+py-eureka-client
+yfinance
