@@ -1,78 +1,148 @@
 import React, { useEffect } from 'react';
-import API from '../../API';
-import Cookies from 'universal-cookie';
-import jwtDecode from 'jwt-decode';
-import { color } from '../../color';
 import Global from '../Global.css';
-import { useNavigate } from 'react-router-dom';
+import API from '../../API';
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { color } from '../../color';
+import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import DataTable from '../Data/DataTable';
+import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, tableCellClasses } from '@mui/material';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+const classes = {
+    root: {
+        flexGrow: 1,
+        margin: '3vw',
+        maxWith: '100vw',
+        padding: '20',
+    },
+    paper_blue: {
+        padding: 20,
+        textAlign: "center",
+        color: color.blue,
+        boxShadow: `1px 1px 10px 0px ${color.blue}`,
+    },
+    paper_green: {
+        padding: 20,
+        textAlign: "center",
+        color: color.blue,
+        boxShadow: `1px 1px 10px 0px ${color.green}`
+    },
+    paper_red: {
+        padding: 20,
+        textAlign: "center",
+        color: color.blue,
+        boxShadow: `1px 1px 10px 0px ${color.red}`
+    }
+};
 
 const Home = () => {
     const [txt, setTxt] = React.useState(null);
-    const [name, setName] = React.useState(null);
-    const navigate = useNavigate();
-    const [isAuthenticated, setAuthenticated] = React.useState(false);
-    
+    const [spacing, setSpacing] = React.useState(1);
+    const rows = [
+        ['JANATAMF', 0, 0, 0, 6.1, 6.1, 0, 0, 0, 0],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['STPRIMFMF', 14.8, 14.9, 14.7, 14.8, 14.6, 0.2, 87, 0.604, 40899],
+        ['AAMRANET', 57.8, 59.7, 55.6, 57.8, 55.8, 2, 2034, 76.736, 1322921]
+    ];
+    const header = ['symbol', 'ltp', 'high', 'low', 'open', 'close', 'ycp', 'trade', 'value', 'volume'];
+
+    const data = [header, rows];
+
+    const trending = [
+        ['TESLA', '8%', '2B'],
+        ['AAPL', '6%', '1.7B'],
+        ['AMD', '5.5%', '500M']
+    ]
+
+
     useEffect(() => {
-        const refresh_token = new Cookies().get('refresh_token');
-        const config = {
-            headers: {
-                'Authorization': `Bearer ${refresh_token}`
-            }
-        }
-        if (refresh_token) {
-            const decode = jwtDecode(refresh_token);
-
-            if (decode.exp < (new Date()).getMilliseconds()) {
-                new Cookies().remove('refresh_token');
-                navigate('/');
-                window.location.reload();
-            }
-            else {
-
-                API.post('/home/hello', {}, config).then(res => {
-                    console.log(res)
-                    setTxt(res.data);
-                    setName(decode.name)
-                    setAuthenticated(true);
-                }).catch(err => {
-                    console.log(err);
-                });
-            }
-        }
-        else {
-            console.log("No refresh token");
-            navigate('/')
-        }
-
+        // API.get('/anonym/hello').then(res => {
+        //   console.log(res)
+        //   setTxt(res.data);
+        // }).catch(err => {
+        //   console.log(err);
+        // });
     }, []);
 
-    return (<>
-        {isAuthenticated ?
-        <div className='center'>
-            <h1 style={{ color: color.primary }}>Hello {name}</h1>
-        </div>
-        : <></>}
-    </>);
+    const table = (data) => {
+        return (
+            <TableContainer>
+                <Table
+                    sx={{
+                        [`& .${tableCellClasses.root}`]: {
+                            borderBottom: "none"
+                        }
+                    }}
+                >
+                    <TableHead>
+                        {/* {data[0].map} */}
+                    </TableHead>
+                    <TableBody>
+                        {
+                            data.map((item, index) => {
+                                return (
+                                    <TableRow key={index}>
+                                        {
+                                            item.map((item, index) => {
+                                                return (
+                                                    <TableCell key={index}>{item}</TableCell>
+                                                )
+                                            })
+                                        }
+                                    </TableRow>
+                                )
+                            })
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    }
 
-}
+
+    return (
+        <div style={classes.root} className='center'>
+            <Grid container spacing={3} style={{ maxWidth: '90vw' }}>
+                <Grid container spacing={3} style={{ maxWidth: '90vw', margin: '3vw' }}>
+                    <Grid item xs={12} sm={4}>
+                        <Paper style={classes.paper_blue}>
+                            <div className='thick'>Trending</div>
+                            {table(trending)}
+                        </Paper>
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                        <Paper style={classes.paper_green}>
+                            <div className='thick' style={{ color: `${color.green}` }}>Top Gainers Today</div>
+                            {table(trending)}
+                        </Paper>
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                        <Paper style={classes.paper_red}>
+                            <span className='thick' style={{ color: `${color.red}` }}>Top Loosers Today</span>
+                            {table(trending)}
+                        </Paper>
+                    </Grid>
+
+                </Grid>
+
+                <Grid item xs={12} >
+                    <DataTable data={data} />
+                </Grid>
+            </Grid>
+        </div>
+    );
+};
+
 export default Home;

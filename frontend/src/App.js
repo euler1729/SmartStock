@@ -1,10 +1,11 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Outlet, Navigate } from 'react-router-dom';
 
 
 import Navbar from './components/header/Navbar';
 import HomeCommon from './components/home/HomeCommon';
+import Home from './components/home/Home';
+
 import Market from './components/market/Market';
 import Watchlist from './components/watchlist/Watchlist';
 import Auth from './components/auth/Auth';
@@ -23,8 +24,7 @@ function App() {
       <Router>
         <Routes>
 
-          <Route path='/' element={<HomeCommon/>} />
-
+          <Route path='/' element={<HomeX/>} />
           <Route path='/market' element={<Protected />} >
             <Route path='/market' element={<Market />} />
           </Route>
@@ -48,6 +48,19 @@ function App() {
     </div>
   );
 }
+
+
+const HomeX = ()=>{
+  const refresh_token = new Cookies().get('refresh_token');
+  if(refresh_token){
+    if(jwtDecode(refresh_token).exp>=(new Date()).getMilliseconds()){
+      return <Home/>
+    }
+    return <HomeCommon/>
+  }
+  return <HomeCommon/>
+}
+
 
 const Protected = () => {
   const refresh_token = new Cookies().get('refresh_token');
