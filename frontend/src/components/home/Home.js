@@ -2,19 +2,23 @@ import React, { useEffect } from 'react';
 import Global from '../Global.css';
 import API from '../../API';
 
+
+
 import { color } from '../../color';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import DataTable from '../Data/DataTable';
 import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, tableCellClasses } from '@mui/material';
+import News from './News';
+import Marque from './Marque';
 
 
 const classes = {
     root: {
         flexGrow: 1,
         margin: '3vw',
-        maxWith: '100vw',
+        // maxWith: '100vw',
         padding: '20',
     },
     paper_blue: {
@@ -111,36 +115,39 @@ const Home = () => {
 
 
     return (
-        <div style={classes.root} className='center'>
-            <Grid container spacing={3} style={{ maxWidth: '90vw' }}>
-                <Grid container spacing={3} style={{ maxWidth: '90vw', margin: '3vw' }}>
-                    <Grid item xs={12} sm={4}>
-                        <Paper style={classes.paper_blue}>
-                            <div className='thick'>Trending</div>
-                            {table(trending)}
-                        </Paper>
+        <div>
+            <Marque />
+            <div style={classes.root} className='center'>
+                <Grid container spacing={3} style={{ maxWidth: '90vw' }}>
+                    <Grid container spacing={3} style={{ maxWidth: '90vw', margin: '3vw' }}>
+                        <Grid item xs={12} sm={4}>
+                            <Paper style={classes.paper_blue}>
+                                <div className='thick'>Trending</div>
+                                {table(trending)}
+                            </Paper>
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                            <Paper style={classes.paper_green}>
+                                <div className='thick' style={{ color: `${color.green}` }}>Top Gainers Today</div>
+                                {table(trending)}
+                            </Paper>
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                            <Paper style={classes.paper_red}>
+                                <span className='thick' style={{ color: `${color.red}` }}>Top Loosers Today</span>
+                                {table(trending)}
+                            </Paper>
+                        </Grid>
+
                     </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                        <Paper style={classes.paper_green}>
-                            <div className='thick' style={{ color: `${color.green}` }}>Top Gainers Today</div>
-                            {table(trending)}
-                        </Paper>
+                    <Grid item xs={12} >
+                        <h1>Some Elements</h1>
                     </Grid>
-
-                    <Grid item xs={12} sm={4}>
-                        <Paper style={classes.paper_red}>
-                            <span className='thick' style={{ color: `${color.red}` }}>Top Loosers Today</span>
-                            {table(trending)}
-                        </Paper>
-                    </Grid>
-
                 </Grid>
-
-                <Grid item xs={12} >
-                    <DataTable data={data} />
-                </Grid>
-            </Grid>
+            </div>
         </div>
     );
 };

@@ -55,45 +55,45 @@ const Account = () => {
     }
 
     useEffect(() => {
-        // const refresh_token = new Cookies().get('refresh_token');
-        // const config = {
-        //     headers: {
-        //         'Authorization': `Bearer ${refresh_token}`
-        //     }
-        // }
-        // console.log(config);
-        // if (refresh_token) {
-        //     const decode = jwtDecode(refresh_token);
-        //     // console.log(decode);
-        //     const req = {
-        //         uid: decode.uid,
-        //         email: decode.sub.toLowerCase()
-        //     }
-        //     if (decode.exp < (new Date()).getMilliseconds()) {
-        //         new Cookies().remove('refresh_token');
-        //         window.location.reload();
-        //     } else {
-        //         API.post('/account/info', req, config).then(res => {
-        //             console.log(res);
-        //             if (res.status < 300) {
-        //                 setName(res.data.name);
-        //                 setEmail(res.data.email);
-        //             } else {
-        //                 // new Cookies().remove('refresh_token');
-        //                 setName(<span style={{ color: color.red }}>Error</span>);
-        //                 setEmail(<span style={{ color: color.red }}>Error</span>);
-        //                 window.location.reload();
-        //             }
-        //         }).catch(err => {
-        //             setName(<span style={{ color: 'red' }}>Error</span>);
-        //                 setEmail(<span style={{ color: 'red' }}>Error</span>);
-        //             console.log(err);
-        //         });
-        //     }
-        // } else {
-        //     new Cookies().remove('refresh_token');
-        //     window.location.reload();
-        // }
+        const refresh_token = new Cookies().get('refresh_token');
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${refresh_token}`
+            }
+        }
+        console.log(config);
+        if (refresh_token) {
+            const decode = jwtDecode(refresh_token);
+            // console.log(decode);
+            const req = {
+                uid: decode.uid,
+                email: decode.sub.toLowerCase()
+            }
+            if (decode.exp < (new Date()).getMilliseconds()) {
+                new Cookies().remove('refresh_token');
+                window.location.reload();
+            } else {
+                API.post('/account/info', req, config).then(res => {
+                    console.log(res);
+                    if (res.status < 300) {
+                        setName(res.data.name);
+                        setEmail(res.data.email);
+                    } else {
+                        // new Cookies().remove('refresh_token');
+                        setName(<span style={{ color: color.red }}>Error</span>);
+                        setEmail(<span style={{ color: color.red }}>Error</span>);
+                        window.location.reload();
+                    }
+                }).catch(err => {
+                    setName(<span style={{ color: 'red' }}>Error</span>);
+                        setEmail(<span style={{ color: 'red' }}>Error</span>);
+                    console.log(err);
+                });
+            }
+        } else {
+            new Cookies().remove('refresh_token');
+            window.location.reload();
+        }
     }, []);
 
     return (

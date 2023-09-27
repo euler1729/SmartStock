@@ -12,15 +12,10 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 @RequestMapping("/anonym")
 public class AnonymController {
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @GetMapping("/hello")
     public String hello() {
         return "Hello Stock Enthusiast! Join Us to feel the full experience!";
-    }
-    @GetMapping("/lstm")
-    public String lstm(){
-        return restTemplate.getForObject("http://flask/lstm", String.class);
     }
 }

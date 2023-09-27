@@ -14,6 +14,7 @@ import Account from './components/account/Account';
 import EditProfile from './components/account/EditProfile';
 import Cookies from 'universal-cookie';
 import jwtDecode from 'jwt-decode';
+import Chart from './components/market/Chart';
 
 
 function App() {
@@ -43,6 +44,11 @@ function App() {
             <Route path='/edit-profile' element={<EditProfile />} />
           </Route>
           <Route path='/auth' element={<Auth />} />
+
+          <Route path='/chart' element={<Protected />} >
+            <Route path='/chart' element={<Chart/>} />
+          </Route>
+
         </Routes>
       </Router>
     </div>
@@ -64,7 +70,7 @@ const HomeX = ()=>{
 
 const Protected = () => {
   const refresh_token = new Cookies().get('refresh_token');
-  console.log(refresh_token)
+  // console.log(refresh_token)
   if (refresh_token) {
     const decode = jwtDecode(refresh_token);
     const d = new Date();
