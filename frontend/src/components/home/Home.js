@@ -61,15 +61,19 @@ const classes = {
         flexDirection: 'column',
         placeItems: 'center',
         backgroundColor: `${color.white}`,
-        marginRight: '5vw',
+        // marginRight: '5vw',
         // padding: '20',
     },
     paper_news: {
         padding: 20,
         boxShadow: `1px 1px 10px 0px ${color.blue}`,
         // borderRadius: '20px',
+        maxWidth: '90vw',
+        maxHeight: '100vh',
+        marginTop: '2vw',
+        justifyContent:'space-between',
     },
-    paper_right:{
+    paper_right: {
         padding: 20,
         textAlign: "center",
         color: color.blue,
@@ -181,70 +185,52 @@ const Home = () => {
                     </Grid>
                     <Grid container style={classes.middle}>
                         <h2>You May Interest</h2>
-                        <ArrowForwardIos style={{padding:'20px'}}/> 
+                        <ArrowForwardIos style={{ padding: '20px' }} />
                         <Grid container spacing={3} style={{}}>
                             <Grid item xs={12} sm={2}>
                                 <Paper style={classes.paper_blue}>
                                     <div className='thick'>AMAZON</div>
-                                    
+
                                 </Paper>
                             </Grid>
 
                             <Grid item xs={12} sm={2}>
                                 <Paper style={classes.paper_green}>
                                     <div className='thick' style={{ color: `${color.green}` }}>GOOGLE</div>
-                                    
+
                                 </Paper>
                             </Grid>
 
                             <Grid item xs={12} sm={2}>
                                 <Paper style={classes.paper_blue}>
                                     <span className='thick' style={{ color: `${color.red}` }}>APPLE</span>
-                                    
+
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <Paper style={classes.paper_red}>
                                     <span className='thick' style={{ color: `${color.red}` }}>YAHOO</span>
-                                    
+
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <Paper style={classes.paper_green}>
                                     <span className='thick' style={{ color: `${color.red}` }}>ALIBABA</span>
-                                    
+
                                 </Paper>
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <Paper style={classes.paper_blue}>
                                     <span className='thick' style={{ color: `${color.red}` }}>TESLA</span>
-                                    
+
                                 </Paper>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={1} style={classes.middle}>
-                        <Grid item xs={12} sm={9} style={classes.paper_news}>
-                            <News />
-
-
-                        </Grid>
-
-                        <Grid item xs={12} sm={3} spacing={3} style={classes.middle_right}>
-                            <Paper style={classes.paper_right}>
-                                <div className='thick'>Trending</div>
-                                {table(trending)}
-                            </Paper>
-                            <Paper style={classes.paper_right}>
-                                <div className='thick'>Trending</div>
-                                {table(trending)}
-                            </Paper>
-                            <Paper style={classes.paper_right}>
-                                <div className='thick'>Trending</div>
-                                {table(trending)}
-                            </Paper>
-                        </Grid>
+                    <Grid item xs={12} sm={12} style={classes.paper_news}>
+                        <News />
                     </Grid>
+
                 </Grid>
             </div>
         </div>

@@ -13,5 +13,15 @@ class news(Resource):
             print(args)
             symbols = args.get('symbols')
             ticks = yf.Tickers(symbols)
-            return jsonify(ticks.news())
+            news = ticks.news()
+            print(news)
+            clusters = []
+            for symbol in symbols:
+                if news[symbol]:
+                    arr = news[symbol]
+                    for x in arr:
+                        clusters.append(x)
+            clusters.sort(key=lambda x: x['providerPublishTime'], reverse=True)
+
+            return jsonify(clusters)
             

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
-import AspectRatio from '@mui/joy/AspectRatio';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import CardOverflow from '@mui/joy/CardOverflow';
-import Typography from '@mui/joy/Typography';
+import React, { useEffect, useState } from 'react'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
 
 import API from '../../API';
 import { color } from '../../color';
@@ -11,13 +11,18 @@ import jwtDecode from 'jwt-decode';
 import Cookies from 'universal-cookie';
 
 import { Grid } from '@mui/material';
+import { Link } from 'react-router-dom';
+import Marquee from 'react-fast-marquee';
 
 const classes = {
     root: {
         flexGrow: 1,
         marginLeft: '3vw',
-        // maxWith: '100vw',
-        padding: '20',
+        maxWith: '90vw',
+        padding: '15',
+        marginRigth: '3vw',
+        alignItems: 'flex-start',
+        maxHeight: '100vh',
     },
     paper_blue: {
         padding: 20,
@@ -39,46 +44,8 @@ const classes = {
     }
 }
 
-
 const News = () => {
-    const [data, setData] = React.useState(null);
-    useEffect(() => {
-        // const refresh_token = new Cookies().get('refresh_token');
-        // const config = {
-        //     headers: {
-        //         'Authorization': `Bearer ${refresh_token}`
-        //     }
-        // }
-        // // console.log(config);
-        // if (refresh_token) {
-        //     const decode = jwtDecode(refresh_token);
-        //     // console.log(decode);
-        //     const req = {
-        //         uid: decode.uid,
-        //         email: decode.sub.toLowerCase()
-        //     }
-        //     if (decode.exp < (new Date()).getMilliseconds()) {
-        //         new Cookies().remove('refresh_token');
-        //         window.location.reload();
-        //     } else {
-        //         API.post('/news/clusters', req, config).then(res => {
-        //             console.log(res);
-        //             if (res.status < 300) {
-        //                 setData(res.data);
-        //             } else {
-        //                 setData(<span style={{ color: color.red }}>Error</span>);
-        //             }
-        //         }).catch(err => {
-        //             console.log(err);
-        //             setData(<span style={{ color: 'red' }}>err</span>)
-        //         });
-        //     }
-        // } else {
-        //     new Cookies().remove('refresh_token');
-        //     window.location.reload();
-        // }
-
-    }, []);
+    const colors = [color.blue, color.green, color.violet, color.lightViolet, color.pink, color.navy, color.gray];
     const n1 = {
         "link": "https://finance.yahoo.com/news/deep-value-stocks-etfs-top-183836841.html",
         "providerPublishTime": 1696012716,
@@ -106,54 +73,100 @@ const News = () => {
         "type": "STORY",
         "uuid": "cf133c77-720c-3ab3-8786-0eac2ae3abaf"
     };
+    const [data, setData] = useState([n1, n1, n1]);
+
+    useEffect(() => {
+        const refresh_token = new Cookies().get('refresh_token');
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${refresh_token}`
+            }
+        }
+        // console.log(config);
+        if (refresh_token) {
+            const decode = jwtDecode(refresh_token);
+            // console.log(decode);
+            const req = {
+                uid: decode.uid,
+                email: decode.sub.toLowerCase()
+            }
+            if (decode.exp < (new Date()).getMilliseconds()) {
+                new Cookies().remove('refresh_token');
+                window.location.reload();
+            } else {
+                API.get('/news/clusters',config).then(res => {
+                    console.log(res);
+                    if (res.status < 300) {
+                        setData(res.data);
+                    } else {
+                        setData(<span style={{ color: color.red }}>Error</span>);
+                    }
+                }).catch(err => {
+                    new Cookies().remove('refresh_token');
+                    window.location.reload();
+                });
+            }
+        } else {
+            new Cookies().remove('refresh_token');
+            window.location.reload();
+        }
+
+    }, []);
+
 
     return (
-
+            
         <div style={{}}>
             <h2 style={{}}>Business Insight</h2>
-            <Grid container style={{}}>
+            <Marquee pauseOnHover>
+                {
+                    data.map((item, index) => {
+                        return (
+                            <Card key={index} sx={{ maxWidth: 250, height:350, boxShadow: `1px 1px 10px 0px ${color.blue}`, marginBottom:'2vh', margin:'1vw' }}>
+                                <CardActionArea>
+                                    <div style={{ position: "relative" }}>
+                                        <CardMedia
+                                            component="img"
+                                            height="140"
+                                            image={item.thumbnail.resolutions[0].url}
+                                            alt="green iguana"
+                                        />
+                                        <div style={{ position: "absolute", color: "white", top: 10, left: "85%", transform: "translateX(-50%)", background: `black`, fontWeight: 'bold', fontSize: '14px', borderRadius: '2px', padding: '3px' }}>
+                                            {item.type}
+                                        </div>
+                                        <div style={{ position: "absolute", color: "white", top: 10, left: "20%", transform: "translateX(-50%)", background: `black`, fontWeight: 'bold', fontSize: '10px', borderRadius: '2px', padding: '3px' }}>
+                                            {new Date(item.providerPublishTime * 1000).toDateString()}
+                                        </div>
+                                    </div>
+                                    <CardContent onClick={() => { window.open(item.link) }}>
+                                        <Typography gutterBottom style={{fontSize:`${Math.trunc(15/item.title.length)*4})px`}} component="div">
+                                            {item.title}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {new Date(item.providerPublishTime * 1000).toDateString()}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Publisher: {item.publisher}
+                                        </Typography>
+                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                            {
+                                                item.relatedTickers.map((item, index) => {
+                                                    return (
+                                                        <Typography variant="body2" style={{ margin: '2px', backgroundColor: `${colors[index % colors.length]}`, borderRadius: '2px', padding: '2px', color: 'white', fontSize: '10px' }}>
+                                                            {item}
+                                                        </Typography>
+                                                    );
+                                                })
+                                            }
+                                        </div>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        );
+                    })
+                }
 
-                <Card orientation="horizontal" variant="outlined" sx={{ width: 260 }}>
-                    <CardOverflow>
-                        <AspectRatio ratio="1" sx={{ width: 90 }}>
-                            <img
-                                src={n1.thumbnail.resolutions[1].url}
-                                srcSet={n1.thumbnail.resolutions[1].url}
-                                loading="lazy"
-                                alt=""
-                            />
-                            <Typography>
-                                <span style={{ color: color.white, backgroundColor: color.blue, padding: '5px' }}>{n1.publisher}</span>
-                            </Typography>
-                        </AspectRatio>
-                    </CardOverflow>
-                    <CardContent>
-                        <Typography fontWeight="md" textColor="success.plainColor">
-                            {n1.title}
-                        </Typography>
-                        <Typography level="body-sm">{new Date(n1.providerPublishTime*1000).toDateString()}</Typography>
-                    </CardContent>
-                    <CardOverflow
-                        variant="soft"
-                        color="primary"
-                        sx={{
-                            px: 0.2,
-                            writingMode: 'vertical-rl',
-                            textAlign: 'center',
-                            fontSize: 'xs',
-                            fontWeight: 'xl',
-                            letterSpacing: '1px',
-                            textTransform: 'uppercase',
-                            borderLeft: '1px solid',
-                            borderColor: 'divider',
-                        }}
-                    >
-                        |{n1.relatedTickers.map((item, index) => {
-                            return <span key={index}>{item+'|'}</span>
-                        })}
-                    </CardOverflow>
-                </Card>
-            </Grid>
+            </Marquee>
         </div>
     );
 
