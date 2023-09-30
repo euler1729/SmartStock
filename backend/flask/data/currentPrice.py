@@ -22,7 +22,8 @@ class currentPrice(Resource):
             if not data.empty:
                 # Get the current price
                 current_price = data['Close'].iloc[-1]
-
+                volume = data['Volume'].iloc[-1]
+                print(volume)
                 # Calculate changes in price and percentage
                 # Previous day's closing price
                 previous_close = data['Close'].iloc[-2]
@@ -40,10 +41,11 @@ class currentPrice(Resource):
                 # Return the stock information
                 return {
                     'symbol': symbol,
-                    'currentPrice': current_price,
-                    'priceChange': price_change,
-                    'percentChange': percent_change,
-                    'up': direction
+                    'current_price': current_price,
+                    'price_change': price_change,
+                    'percent_change': percent_change,
+                    'up': direction,
+                    'volume': int(volume)
                 }
             else:
                 return 'No historical data available for this symbol'

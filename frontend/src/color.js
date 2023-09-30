@@ -6,4 +6,6 @@ export const color = {
     violet: "#7F00FF",
     red: '#ff0000',
     green:'#008000',
+    gray: "#D3D3D3",
+    lightBlue: "#CFFFB0",
 }

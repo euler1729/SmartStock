@@ -21,6 +21,8 @@ public class Stock {
     private float percent_change;
     @JsonProperty("up")
     private int up;
+    @JsonProperty("volume")
+    private Long volume;
 
     public String toString(){
         return "Stock{" +

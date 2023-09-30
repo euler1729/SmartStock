@@ -31,7 +31,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String jwt) {
+    public Claims extractAllClaims(String jwt) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())

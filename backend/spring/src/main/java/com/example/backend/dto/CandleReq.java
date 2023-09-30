@@ -13,4 +13,12 @@ public class CandleReq {
     private String symbol;
     private String interval;
     private String period;
+
+    public String toString(){
+        return "CandleReq{" +
+                "symbol='" + symbol + '\'' +
+                ", interval='" + interval + '\'' +
+                ", period='" + period + '\'' +
+                '}';
+    }
 }

@@ -12,14 +12,15 @@ import DataTable from '../Data/DataTable';
 import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, tableCellClasses } from '@mui/material';
 import News from './News';
 import Marque from './Marque';
+import { ArrowForwardIos } from '@mui/icons-material';
 
 
 const classes = {
     root: {
         flexGrow: 1,
-        margin: '3vw',
+        margin: '2vw',
         // maxWith: '100vw',
-        padding: '20',
+        // padding: '20',
     },
     paper_blue: {
         padding: 20,
@@ -38,6 +39,42 @@ const classes = {
         textAlign: "center",
         color: color.blue,
         boxShadow: `1px 1px 10px 0px ${color.red}`
+    },
+    middle: {
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: `${color.white}`,
+        marginTop: '2vw',
+        // marginRight: '2vw',
+    },
+    middle_right: {
+        display: 'flex',
+        flexDirection: 'column',
+        // placeItems: 'center',
+        backgroundColor: `${color.gray}`,
+        // marginTop: '5vw',
+        justifyContent: 'space-betqween',
+        // padding: '20',
+    },
+    middle_left: {
+        display: 'flex',
+        flexDirection: 'column',
+        placeItems: 'center',
+        backgroundColor: `${color.white}`,
+        marginRight: '5vw',
+        // padding: '20',
+    },
+    paper_news: {
+        padding: 20,
+        boxShadow: `1px 1px 10px 0px ${color.blue}`,
+        // borderRadius: '20px',
+    },
+    paper_right:{
+        padding: 20,
+        textAlign: "center",
+        color: color.blue,
+        boxShadow: `1px 1px 10px 0px ${color.blue}`,
+        marginBottom: '2vw',
     }
 };
 
@@ -119,7 +156,7 @@ const Home = () => {
             <Marque />
             <div style={classes.root} className='center'>
                 <Grid container spacing={3} style={{ maxWidth: '90vw' }}>
-                    <Grid container spacing={3} style={{ maxWidth: '90vw', margin: '3vw' }}>
+                    <Grid container spacing={3} style={{}}>
                         <Grid item xs={12} sm={4}>
                             <Paper style={classes.paper_blue}>
                                 <div className='thick'>Trending</div>
@@ -142,9 +179,71 @@ const Home = () => {
                         </Grid>
 
                     </Grid>
+                    <Grid container style={classes.middle}>
+                        <h2>You May Interest</h2>
+                        <ArrowForwardIos style={{padding:'20px'}}/> 
+                        <Grid container spacing={3} style={{}}>
+                            <Grid item xs={12} sm={2}>
+                                <Paper style={classes.paper_blue}>
+                                    <div className='thick'>AMAZON</div>
+                                    
+                                </Paper>
+                            </Grid>
 
-                    <Grid item xs={12} >
-                        <h1>Some Elements</h1>
+                            <Grid item xs={12} sm={2}>
+                                <Paper style={classes.paper_green}>
+                                    <div className='thick' style={{ color: `${color.green}` }}>GOOGLE</div>
+                                    
+                                </Paper>
+                            </Grid>
+
+                            <Grid item xs={12} sm={2}>
+                                <Paper style={classes.paper_blue}>
+                                    <span className='thick' style={{ color: `${color.red}` }}>APPLE</span>
+                                    
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                                <Paper style={classes.paper_red}>
+                                    <span className='thick' style={{ color: `${color.red}` }}>YAHOO</span>
+                                    
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                                <Paper style={classes.paper_green}>
+                                    <span className='thick' style={{ color: `${color.red}` }}>ALIBABA</span>
+                                    
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                                <Paper style={classes.paper_blue}>
+                                    <span className='thick' style={{ color: `${color.red}` }}>TESLA</span>
+                                    
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={1} style={classes.middle}>
+                        <Grid item xs={12} sm={9} style={classes.paper_news}>
+                            <News />
+
+
+                        </Grid>
+
+                        <Grid item xs={12} sm={3} spacing={3} style={classes.middle_right}>
+                            <Paper style={classes.paper_right}>
+                                <div className='thick'>Trending</div>
+                                {table(trending)}
+                            </Paper>
+                            <Paper style={classes.paper_right}>
+                                <div className='thick'>Trending</div>
+                                {table(trending)}
+                            </Paper>
+                            <Paper style={classes.paper_right}>
+                                <div className='thick'>Trending</div>
+                                {table(trending)}
+                            </Paper>
+                        </Grid>
                     </Grid>
                 </Grid>
             </div>

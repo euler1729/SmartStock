@@ -3,9 +3,7 @@ package com.example.backend.controllers;
 import com.example.backend.dto.CandleReq;
 import com.example.backend.model.Candle;
 import com.example.backend.model.Stock;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +22,7 @@ public class DataController {
 
     @PostMapping("/candle")
     public ResponseEntity<List<Candle>> getCandle(@RequestBody CandleReq candleReq) {
+//        System.out.println(candleReq.toString());
         ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/candle", candleReq, String.class);
         if(response.getStatusCode().is2xxSuccessful()) {
             try{
@@ -45,6 +44,22 @@ public class DataController {
             try {
                 List<Stock> stocks = mapper.readValue(response.getBody(), new TypeReference<>() {});
                 return ResponseEntity.ok(stocks);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/current-price")
+    public ResponseEntity<Stock> getCurrentPrice(@RequestBody CandleReq symbol) {
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/current-price", symbol, String.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            try {
+                Stock currentPrice = mapper.readValue(response.getBody(), new TypeReference<>() {});
+                return ResponseEntity.ok(currentPrice);
             } catch (Exception e) {
                 e.printStackTrace();
             }

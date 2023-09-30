@@ -1,23 +1,23 @@
 import yfinance as yf
 import pandas as pd
 from flask_restful import Resource
-from flask import request, jsonify
-# import threading
-# import concurrent
-# import json
+from flask import request
+import threading
+import concurrent
+import json
 
 
 symbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "JPM", "V", "NVDA", "BRK-A",  
                    "JNJ", "PYPL", "HD", "DIS", "BAC", "MA", "ADBE", "XOM", "UNH", "T", 
-                #    "INTC", "VZ", "PFE", "CSCO", "WMT", "ABT", "CRM", "KO", "PEP", "WFC", 
-                #    "CMCSA", "CVX", "MRK", "BA", "PM", "TMO", "NKE", "MCD", "PYPL", "NFLX", 
-                #    "AVGO", "QCOM", "TXN", "TGT", "CAT", "LMT", "ORCL", "MDT", "AON", "SPG",
-                #    "TJX", "USB", "MMM", "CVS", "AMGN", "AXP", "LOW", "BKNG", "COST", "GS",
-                #    "SCHW", "C", "FDX", "MET", "COP", "RTX", "DUK", "MO", "GILD", "AEP",
-                #    "DOW", "SO", "PLD", "EMR", "CCI", "BDX", "REGN", "VRTX", "ADI", "CL", 
-                #    "TEL", "KMB", "ATVI", "TMUS", "ZTS", "HON", "SYK", "ECL",
-                #    "EQR", "PSA", "KMI", "REG", "SLB", "DHR", "ADP", "CHTR", "IQV",
-                #    "SPGI", "KHC", "K", "AMAT", "WBA", "HUM", "CME", "BK", "NOC", "GPN",
+                   "INTC", "VZ", "PFE", "CSCO", "WMT", "ABT", "CRM", "KO", "PEP", "WFC", 
+                   "CMCSA", "CVX", "MRK", "BA", "PM", "TMO", "NKE", "MCD", "PYPL", "NFLX", 
+                   "AVGO", "QCOM", "TXN", "TGT", "CAT", "LMT", "ORCL", "MDT", "AON", "SPG",
+                   "TJX", "USB", "MMM", "CVS", "AMGN", "AXP", "LOW", "BKNG", "COST", "GS",
+                   "SCHW", "C", "FDX", "MET", "COP", "RTX", "DUK", "MO", "GILD", "AEP",
+                   "DOW", "SO", "PLD", "EMR", "CCI", "BDX", "REGN", "VRTX", "ADI", "CL", 
+                   "TEL", "KMB", "ATVI", "TMUS", "ZTS", "HON", "SYK", "ECL",
+                   "EQR", "PSA", "KMI", "REG", "SLB", "DHR", "ADP", "CHTR", "IQV",
+                   "SPGI", "KHC", "K", "AMAT", "WBA", "HUM", "CME", "BK", "NOC", "GPN",
                    ]
 
 
@@ -29,7 +29,7 @@ symbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "JPM", "V", "NVDA", "BRK-A",
 class stocks(Resource):
 
     def post(self):
-        # tmp = symbols[:20]
+        
         symbol_string = ' '.join(symbols) + ''
         ticker = yf.Tickers(symbol_string)
 
@@ -57,16 +57,13 @@ class stocks(Resource):
                 "symbol": symbol,
                 "current_price": current_price,
                 "price_change": change,
-                "percent_change": percentage_change,
-                "up": direction,
-                'volume': int(volume),
+                "perchange_change": percentage_change,
+                "up_down": direction,
             })
 
-        # df = pd.concat(stock_data, ignore_index=True)
-        # print(stock_data_frames.to_dict('records'))
-        # print(df.to_dict())
-        # print(df.to_numpy())
-        return jsonify(stock_data)
+        js = json.dumps(stock_data)
+
+        return js
 
     def get(self):
         # Define the stock symbol (e.g., AAPL for Apple Inc.)

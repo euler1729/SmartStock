@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 from flask_restful import Resource
-from flask import request, jsonify
+from flask import request
 
 
 class Candle(Resource):
@@ -24,7 +24,7 @@ class Candle(Resource):
 
             # Process the data or return it as needed
             
-            return jsonify(hourly_data.to_dict("records"))
+            return hourly_data.to_json()
         else:
             return 'Missing parameters'
 
