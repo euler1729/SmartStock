@@ -81,6 +81,14 @@ public class SecurityConfig implements WebMvcConfigurer {
         List<String> origins = new ArrayList<>();
         origins.add("http://localhost:3000/");
         origins.add("http://192.168.0.106:3000/");
+        CorsConfiguration config = getCorsConfiguration(origins);
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
+
+    private static CorsConfiguration getCorsConfiguration(List<String> origins) {
         List<String> methods = new ArrayList<>();
         methods.add("POST");
         methods.add("GET");
@@ -89,6 +97,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         methods.add("OPTIONS");
 
         List<String> headers = new ArrayList<>();
+        headers.add("*");
         headers.add("Authorization");
         headers.add("Content-Type");
         headers.add("Options");
@@ -99,9 +108,6 @@ public class SecurityConfig implements WebMvcConfigurer {
         config.setAllowedOrigins(origins);
         config.setAllowedMethods(methods);
         config.setAllowedHeaders(headers);
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return bean;
+        return config;
     }
 }

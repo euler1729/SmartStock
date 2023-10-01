@@ -23,6 +23,30 @@ public class Stock {
     private int up;
     @JsonProperty("volume")
     private Long volume;
+    @JsonProperty("dividend")
+    private float dividend;
+    @JsonProperty("stock_split")
+    private float stock_split;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("website")
+    private String website;
+    @JsonProperty("ltp")
+    private int ltp;
+    @JsonProperty("ycp")
+    private int ycp;
+    @JsonProperty("trade")
+    private int trade;
+    @JsonProperty("value")
+    private int value;
+    @JsonProperty("open")
+    private float open;
+    @JsonProperty("high")
+    private float high;
+    @JsonProperty("low")
+    private float low;
+    @JsonProperty("close")
+    private float close;
 
     public String toString(){
         return "Stock{" +

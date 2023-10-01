@@ -54,16 +54,22 @@ const Marque = () => {
 
     const [cards, setCards] = useState([]);
     const [data, setData] = useState([]);
-
+    const [offset, setOffset] = useState(10);
+    const [sent, setSent] = useState(false);
+    
     useEffect(() => {
         const refresh_token = new Cookies().get('refresh_token');
         const config = {
             headers: {
                 'Authorization': `Bearer ${refresh_token}`
             }
-        }
-
-        API.get('/data/stocks', config).then(res => {
+        };
+        const payload = {
+            'offset': offset
+        };
+        if(sent) return;
+        setSent(true);
+        API.post('/data/stocks',payload, config).then(res => {
             // console.log(res.data);
             setData(res.data);
             // console.log(data[0]);
@@ -76,7 +82,7 @@ const Marque = () => {
         }).catch(err => {
             console.log(err);
         });
-
+        setSent(false);
     }, []);
 
 

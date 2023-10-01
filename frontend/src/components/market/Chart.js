@@ -13,8 +13,8 @@ const classes = {
     root: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        // alignItems: 'center',
+        // justifyContent: 'center',
         margin: '3vw',
 
     },
@@ -26,10 +26,17 @@ const classes = {
         color: color.white,
         fontWeight: 'bold',
         fontSize: '2vw',
-        padding: '0vw 0vw 0vw 3vw',
+        padding: '8px 8px 5px 3vw',
         margin: '0vw 0vw 1vw 0vw',
         borderRadius: '1vw',
         boxShadow: `1px 1px 10px 0px ${color.pink}`,
+        textDecoration:'none'
+    },
+    vertical_line: {
+        borderLeft: '6px solid white',
+        height: '11.9vh',
+        // position:'absolute',
+        left: '50%'
     }
 }
 
@@ -40,7 +47,7 @@ const Chart = () => {
     let search = window.location.search;
     const params = new URLSearchParams(search);
     const symbol = params.get('symbol');
-    const [data, setData] = useState([])
+    const [data, setData] = useState({})
 
     useEffect(() => {
         const refresh_token = new Cookies().get('refresh_token');
@@ -67,14 +74,15 @@ const Chart = () => {
     return (
         <div style={classes.root}>
             <Grid container>
-                <Grid container xs={12} sm={12} style={classes.top}>
-                    <Grid item xs={12} sm={6}>
-                        <h3>{symbol}</h3>
+                <Grid container style={classes.top}>
+                    <Grid item xs={12} sm={4} style={{display: 'flex', flexDirection:'column', fontSize:14, textDecoration:'none'}}>
+                        <div>{symbol}</div>
+                        <div style={{fontSize:'12px', textDecoration:'none', color:'${color.white'}}><a href={data?.website}>{data?.name}</a></div>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
-
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={4} style={{display: 'flex', flexDirection:'column', fontWeight:'normal', fontSize:'12px'}}>
+                        <div>Current Price: ${data?.current_price.toFixed(2)}</div>
+                        <div>Price Change: ${data?.price_change.toFixed(2)}</div>
+                        <div>Percentage of Change: {data?.percent_change.toFixed(2)}%</div>
                     </Grid>
                 </Grid>
                 <Grid item xs={12} sm={12} style={{}}>

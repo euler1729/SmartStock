@@ -13,6 +13,7 @@ import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, table
 import News from './News';
 import Marque from './Marque';
 import { ArrowForwardIos } from '@mui/icons-material';
+import Cookies from "universal-cookie";
 
 
 const classes = {
@@ -71,7 +72,7 @@ const classes = {
         maxWidth: '90vw',
         maxHeight: '100vh',
         marginTop: '2vw',
-        justifyContent:'space-between',
+        justifyContent: 'space-between',
     },
     paper_right: {
         padding: 20,
@@ -104,19 +105,71 @@ const Home = () => {
     const data = [header, rows];
 
     const trending = [
-        ['TESLA', '8%', '2B'],
-        ['AAPL', '6%', '1.7B'],
-        ['AMD', '5.5%', '500M']
+        {
+            "current_price": 95.62,
+            "percent_change": 6.68,
+            "price_change": 5.99,
+            "symbol": "NKE",
+            "up": 1,
+            "volume": 34920400
+        },
+        {
+            "current_price": 509.9,
+            "percent_change": 1.04,
+            "price_change": 5.23,
+            "symbol": "ADBE",
+            "up": 1,
+            "volume": 2795900
+        },
+        {
+            "current_price": 434.99,
+            "percent_change": 0.95,
+            "price_change": 4.1,
+            "symbol": "NVDA",
+            "up": 1,
+            "volume": 39722100
+        },
+        {
+            "current_price": 250.22,
+            "percent_change": 1.56,
+            "price_change": 3.84,
+            "symbol": "TSLA",
+            "up": 1,
+            "volume": 128346200
+        },
+        {
+            "current_price": 506.17,
+            "percent_change": 0.63,
+            "price_change": 3.15,
+            "symbol": "TMO",
+            "up": 1,
+            "volume": 1380500
+        }
     ]
 
 
+    const [gainers, setGainers] = React.useState(trending);
+    const [loosers, setLoosers] = React.useState(trending);
+    const [topVolumes, setTopVolumes] = React.useState(trending);
+
     useEffect(() => {
-        // API.get('/anonym/hello').then(res => {
-        //   console.log(res)
-        //   setTxt(res.data);
-        // }).catch(err => {
-        //   console.log(err);
-        // });
+        const refresh_token = new Cookies().get('refresh_token');
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${refresh_token}`
+            }
+        }
+        if (refresh_token) {
+            API.get('/data/top-stocks', config)
+                .then(res => {
+                    console.log(res.data)
+                    setGainers(res.data[0].gainers);
+                    setLoosers(res.data[0].losers);
+                    setTopVolumes(res.data[0].highest_volume);
+                }).catch(err => {
+                    console.log(err);
+                });
+        }
     }, []);
 
     const table = (data) => {
@@ -134,16 +187,13 @@ const Home = () => {
                     </TableHead>
                     <TableBody>
                         {
-                            data.map((item, index) => {
+                            data?.map((item, index) => {
                                 return (
                                     <TableRow key={index}>
-                                        {
-                                            item.map((item, index) => {
-                                                return (
-                                                    <TableCell key={index}>{item}</TableCell>
-                                                )
-                                            })
-                                        }
+                                        <TableCell style={{ borderBottom: 'none' }}>{item.symbol}</TableCell>
+                                        <TableCell style={{ borderBottom: 'none' }}>{item.percent_change}%</TableCell>
+                                        <TableCell style={{ borderBottom: 'none' }}>${item.current_price.toFixed(2)}</TableCell>
+
                                     </TableRow>
                                 )
                             })
@@ -164,21 +214,21 @@ const Home = () => {
                         <Grid item xs={12} sm={4}>
                             <Paper style={classes.paper_blue}>
                                 <div className='thick'>Trending</div>
-                                {table(trending)}
+                                {table(topVolumes)}
                             </Paper>
                         </Grid>
 
                         <Grid item xs={12} sm={4}>
                             <Paper style={classes.paper_green}>
                                 <div className='thick' style={{ color: `${color.green}` }}>Top Gainers Today</div>
-                                {table(trending)}
+                                {table(gainers)}
                             </Paper>
                         </Grid>
 
                         <Grid item xs={12} sm={4}>
                             <Paper style={classes.paper_red}>
                                 <span className='thick' style={{ color: `${color.red}` }}>Top Loosers Today</span>
-                                {table(trending)}
+                                {table(loosers)}
                             </Paper>
                         </Grid>
 

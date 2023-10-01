@@ -94,12 +94,14 @@ const News = () => {
                 new Cookies().remove('refresh_token');
                 window.location.reload();
             } else {
-                API.get('/news/clusters',config).then(res => {
+                API.get('/news/clusters', config).then(res => {
                     console.log(res);
                     if (res.status < 300) {
                         setData(res.data);
+                        console.log(res.data)
                     } else {
-                        setData(<span style={{ color: color.red }}>Error</span>);
+                        new Cookies().remove('refresh_token');
+                        window.location.reload();
                     }
                 }).catch(err => {
                     new Cookies().remove('refresh_token');
@@ -115,32 +117,32 @@ const News = () => {
 
 
     return (
-            
+
         <div style={{}}>
             <h2 style={{}}>Business Insight</h2>
             <Marquee pauseOnHover>
                 {
                     data.map((item, index) => {
                         return (
-                            <Card key={index} sx={{ maxWidth: 250, height:350, boxShadow: `1px 1px 10px 0px ${color.blue}`, marginBottom:'2vh', margin:'1vw' }}>
+                            <Card key={index} sx={{ maxWidth: 250, height: 350, boxShadow: `1px 1px 10px 0px ${color.blue}`, marginBottom: '2vh', margin: '1vw' }}>
                                 <CardActionArea>
                                     <div style={{ position: "relative" }}>
                                         <CardMedia
                                             component="img"
                                             height="140"
-                                            image={item.thumbnail.resolutions[0].url}
+                                            image={item?.thumbnail?.resolutions[0].url}
                                             alt="green iguana"
                                         />
-                                        <div style={{ position: "absolute", color: "white", top: 10, left: "85%", transform: "translateX(-50%)", background: `black`, fontWeight: 'bold', fontSize: '14px', borderRadius: '2px', padding: '3px' }}>
+                                        <div style={{ opacity:0.5,position: "absolute", color: "white", top: 10, left: "85%", transform: "translateX(-50%)", background: `black`, fontWeight: 'bold', fontSize: '14px', borderRadius: '2px', padding: '3px' }}>
                                             {item.type}
                                         </div>
-                                        <div style={{ position: "absolute", color: "white", top: 10, left: "20%", transform: "translateX(-50%)", background: `black`, fontWeight: 'bold', fontSize: '10px', borderRadius: '2px', padding: '3px' }}>
+                                        {/* <div style={{ position: "absolute", color: "white", top: 10, left: "20%", transform: "translateX(-50%)", background: `black`, fontWeight: 'bold', fontSize: '10px', borderRadius: '2px', padding: '3px' }}>
                                             {new Date(item.providerPublishTime * 1000).toDateString()}
-                                        </div>
+                                        </div> */}
                                     </div>
-                                    <CardContent onClick={() => { window.open(item.link) }}>
-                                        <Typography gutterBottom style={{fontSize:`${Math.trunc(15/item.title.length)*4})px`}} component="div">
-                                            {item.title}
+                                    <CardContent onClick={() => { window.open(item.link) }} >
+                                        <Typography gutterBottom style={{ fontSize: 14, fontWeight:'bold'}} component="div">
+                                            {item.title.length>60?item.title.slice(0,60)+'...':item.title}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
                                             {new Date(item.providerPublishTime * 1000).toDateString()}
@@ -148,11 +150,11 @@ const News = () => {
                                         <Typography variant="body2" color="text.secondary">
                                             Publisher: {item.publisher}
                                         </Typography>
-                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'row'}}>
                                             {
                                                 item.relatedTickers.map((item, index) => {
                                                     return (
-                                                        <Typography variant="body2" style={{ margin: '2px', backgroundColor: `${colors[index % colors.length]}`, borderRadius: '2px', padding: '2px', color: 'white', fontSize: '10px' }}>
+                                                        <Typography key={index} variant="body2" style={{ margin: '2px', backgroundColor: `${colors[index % colors.length]}`, borderRadius: '2px', padding: '2px', color: 'white', fontSize: '10px' }}>
                                                             {item}
                                                         </Typography>
                                                     );

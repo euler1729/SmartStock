@@ -18,12 +18,12 @@ class currentPrice(Resource):
             # Fetch historical data
             # Fetch data for the last trading day
             data = ticker.history(period="2d", interval="1d")
-
+            info = ticker.info
+            # print(info)
             if not data.empty:
                 # Get the current price
                 current_price = data['Close'].iloc[-1]
                 volume = data['Volume'].iloc[-1]
-                print(volume)
                 # Calculate changes in price and percentage
                 # Previous day's closing price
                 previous_close = data['Close'].iloc[-2]
@@ -45,7 +45,9 @@ class currentPrice(Resource):
                     'price_change': price_change,
                     'percent_change': percent_change,
                     'up': direction,
-                    'volume': int(volume)
+                    'volume': int(volume),
+                    'name': info['longName'],
+                    'website': info['website'],
                 }
             else:
                 return 'No historical data available for this symbol'

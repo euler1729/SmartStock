@@ -1,6 +1,7 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.CandleReq;
+import com.example.backend.dto.StocksReq;
 import com.example.backend.model.Candle;
 import com.example.backend.model.Stock;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,9 +39,11 @@ public class DataController {
         return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping("/stocks")
-    public ResponseEntity<List<Stock>> getStocks() {
-        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/stocks", null, String.class);
+    @PostMapping("/stocks")
+    public ResponseEntity<List<Stock>> getStocks(@RequestBody StocksReq stocksReq) {
+        stocksReq.setOffset("0");
+        System.out.println(stocksReq.toString());
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/stocks",stocksReq, String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             try {
                 List<Stock> stocks = mapper.readValue(response.getBody(), new TypeReference<>() {});
@@ -67,6 +71,15 @@ public class DataController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+    @GetMapping("/top-stocks")
+    public ResponseEntity<String> getTopStocks(){
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/top-stocks","", String.class);
+        if(response.getStatusCode().is2xxSuccessful()) {
+             return ResponseEntity.ok(response.getBody());
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

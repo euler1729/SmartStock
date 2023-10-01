@@ -25,7 +25,7 @@ const DataTable = ({ data }) => {
                     <TableHead>
                         <TableRow>
                             {
-                                data[0].map((item, index) => {
+                                data[0]?.map((item, index) => {
                                     return (
                                         <TableCell key={index}>{item}</TableCell>
                                     )
