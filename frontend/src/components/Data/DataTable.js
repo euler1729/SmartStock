@@ -41,6 +41,11 @@ const DataTable = ({ data }) => {
                                     <TableRow key={index} hover role="checkbox" tabIndex={-1}>
                                         {
                                             item.map((item, index) => {
+                                                if(index==6){
+                                                    return (
+                                                        <TableCell key={index} style={{color:item>0?'green':'red'}}>{item}</TableCell>
+                                                    )
+                                                }
                                                 return (
                                                     <TableCell key={index}>{item}</TableCell>
                                                 )

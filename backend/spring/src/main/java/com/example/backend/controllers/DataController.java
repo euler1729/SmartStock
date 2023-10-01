@@ -1,6 +1,7 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.CandleReq;
+import com.example.backend.dto.PredictionReq;
 import com.example.backend.dto.StocksReq;
 import com.example.backend.model.Candle;
 import com.example.backend.model.Stock;
@@ -77,6 +78,16 @@ public class DataController {
         ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/top-stocks","", String.class);
         if(response.getStatusCode().is2xxSuccessful()) {
              return ResponseEntity.ok(response.getBody());
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/prediction")
+    public ResponseEntity<String> getPrediction(@RequestBody PredictionReq req){
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/prediction", req, String.class);
+        if(response.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.ok(response.getBody());
         } else {
             return ResponseEntity.badRequest().build();
         }

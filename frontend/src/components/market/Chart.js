@@ -80,9 +80,9 @@ const Chart = () => {
                         <div style={{fontSize:'12px', textDecoration:'none', color:'${color.white'}}><a href={data?.website}>{data?.name}</a></div>
                     </Grid>
                     <Grid item xs={12} sm={4} style={{display: 'flex', flexDirection:'column', fontWeight:'normal', fontSize:'12px'}}>
-                        <div>Current Price: ${data?.current_price.toFixed(2)}</div>
-                        <div>Price Change: ${data?.price_change.toFixed(2)}</div>
-                        <div>Percentage of Change: {data?.percent_change.toFixed(2)}%</div>
+                        <div>Current Price: ${data?.current_price}</div>
+                        <div>Price Change: ${data?.price_change}</div>
+                        <div>Percentage of Change: {data?.percent_change}%</div>
                     </Grid>
                 </Grid>
                 <Grid item xs={12} sm={12} style={{}}>

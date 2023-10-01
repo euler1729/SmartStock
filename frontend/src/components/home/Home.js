@@ -14,6 +14,7 @@ import News from './News';
 import Marque from './Marque';
 import { ArrowForwardIos } from '@mui/icons-material';
 import Cookies from "universal-cookie";
+import { Link } from 'react-router-dom';
 
 
 const classes = {
@@ -32,13 +33,13 @@ const classes = {
     paper_green: {
         padding: 20,
         textAlign: "center",
-        color: color.blue,
+        color: color.green,
         boxShadow: `1px 1px 10px 0px ${color.green}`
     },
     paper_red: {
         padding: 20,
         textAlign: "center",
-        color: color.blue,
+        color: color.red,
         boxShadow: `1px 1px 10px 0px ${color.red}`
     },
     middle: {
@@ -238,42 +239,48 @@ const Home = () => {
                         <ArrowForwardIos style={{ padding: '20px' }} />
                         <Grid container spacing={3} style={{}}>
                             <Grid item xs={12} sm={2}>
-                                <Paper style={classes.paper_blue}>
-                                    <div className='thick'>AMAZON</div>
-
-                                </Paper>
+                                <Link to={`/chart?symbol=AMZN`} style={{ textDecoration: 'none' }}>
+                                    <Paper style={classes.paper_blue}>
+                                        <div className='thick'>AMAZON</div>
+                                    </Paper>
+                                </Link>
                             </Grid>
 
                             <Grid item xs={12} sm={2}>
-                                <Paper style={classes.paper_green}>
-                                    <div className='thick' style={{ color: `${color.green}` }}>GOOGLE</div>
-
-                                </Paper>
+                                <Link to={`/chart?symbol=GOOGL`} style={{ textDecoration: 'none' }}>
+                                    <Paper style={classes.paper_green}>
+                                        <div className='thick'>GOOGLE</div>
+                                    </Paper>
+                                </Link>
                             </Grid>
 
                             <Grid item xs={12} sm={2}>
-                                <Paper style={classes.paper_blue}>
-                                    <span className='thick' style={{ color: `${color.red}` }}>APPLE</span>
-
-                                </Paper>
+                                <Link to={`/chart?symbol=AAPL`} style={{ textDecoration: 'none' }}>
+                                    <Paper style={classes.paper_red}>
+                                        <div className='thick'>APPLE</div>
+                                    </Paper>
+                                </Link>
                             </Grid>
                             <Grid item xs={12} sm={2}>
-                                <Paper style={classes.paper_red}>
-                                    <span className='thick' style={{ color: `${color.red}` }}>YAHOO</span>
-
-                                </Paper>
+                                <Link to={`/chart?symbol=NVDA`} style={{ textDecoration: 'none' }}>
+                                    <Paper style={classes.paper_blue}>
+                                        <div className='thick'>NVDIA</div>
+                                    </Paper>
+                                </Link>
                             </Grid>
                             <Grid item xs={12} sm={2}>
-                                <Paper style={classes.paper_green}>
-                                    <span className='thick' style={{ color: `${color.red}` }}>ALIBABA</span>
-
-                                </Paper>
+                                <Link to={`/chart?symbol=TSLA`} style={{ textDecoration: 'none' }}>
+                                    <Paper style={classes.paper_red}>
+                                        <div className='thick'>TESLA</div>
+                                    </Paper>
+                                </Link>
                             </Grid>
                             <Grid item xs={12} sm={2}>
-                                <Paper style={classes.paper_blue}>
-                                    <span className='thick' style={{ color: `${color.red}` }}>TESLA</span>
-
-                                </Paper>
+                                <Link to={`/chart?symbol=MSFT`} style={{ textDecoration: 'none' }}>
+                                    <Paper style={classes.paper_green}>
+                                        <div className='thick'>MICROSOFT</div>
+                                    </Paper>
+                                </Link>
                             </Grid>
                         </Grid>
                     </Grid>
