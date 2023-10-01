@@ -10,6 +10,7 @@ from data.news import news
 from data.topStocks import topStocks
 from data.prediction import prediction
 from data.watchlist import watchlist
+from multiprocessing import Pool
 
 
 # Load environment variables
@@ -36,5 +37,8 @@ api.add_resource(news, '/news')
 api.add_resource(topStocks, '/top-stocks')
 api.add_resource(prediction, '/prediction')
 api.add_resource(watchlist, '/watchlist')
+
+pool = Pool(processes=31)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=rest_port,debug=True)

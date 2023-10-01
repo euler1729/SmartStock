@@ -122,12 +122,12 @@ const Chart = () => {
         <div style={classes.root}>
             <Grid container>
                 <Grid container style={classes.top}>
-                    <Grid item xs={12} sm={4} style={{ display: 'flex', flexDirection: 'column', fontSize: 14, textDecoration: 'none' }}>
+                    <Grid item xs={12} sm={9} style={{ display: 'flex', flexDirection: 'column', fontSize: 14, textDecoration: 'none' }}>
                         <div>{symbol}</div>
                         <div style={{ fontSize: '12px' }}><a href={data?.website} style={{ color: 'white', textDecoration: 'none' }}>{data?.name}</a></div>
                     </Grid>
 
-                    <Grid item xs={12} sm={6} style={{ display: 'flex', flexDirection: 'row', fontWeight: 'normal', fontSize: '12px', fontWeight: 'bold' }}>
+                    <Grid item xs={12} sm={3} style={{ display: 'flex', flexDirection: 'row', fontWeight: 'normal', fontSize: '12px', fontWeight: 'bold' }}>
 
                         <div>Current Price: ${data?.current_price}</div>
                         {

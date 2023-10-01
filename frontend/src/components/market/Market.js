@@ -742,7 +742,8 @@ const Market = () => {
 
                 </Grid>
                 {curBtn == 0 &&
-                    <Grid className='center'>
+                    <Grid className='center' style={{display:'flex', flexDirection:'column'}}>
+                        <div><h1>Current Market Status</h1></div>
                         <DataTable data={table} />
                     </Grid>
                 }

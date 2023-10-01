@@ -1,7 +1,6 @@
 package com.example.backend.controllers;
 
 import com.example.backend.dto.WatchListReq;
-import com.example.backend.model.Stock;
 import com.example.backend.model.WatchList;
 import com.example.backend.repositories.WatchListRepo;
 import com.example.backend.services.JwtService;
@@ -13,6 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -25,9 +25,16 @@ public class WatchListController {
     private final String baseUrl = "http://flask";
 
     @PostMapping("/add")
-    public ResponseEntity<String> addWatchList(@RequestBody WatchList watchList) {
+    public ResponseEntity<String> addWatchList(@NonNull HttpServletRequest request,@RequestBody WatchList watchList) {
         try {
-            watchListRepo.save(watchList);
+            final String authHeader = request.getHeader("Authorization");
+            Claims claims = jwtService.extractAllClaims(authHeader.substring(7));
+            int uid = claims.get("uid", Integer.class);
+            WatchList list = WatchList.builder()
+                    .symbol(watchList.getSymbol())
+                    .uid(uid)
+                    .build();
+            watchListRepo.save(list);
             return ResponseEntity.ok("Success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,6 +53,7 @@ public class WatchListController {
                 System.out.println("Empty");
                 return ResponseEntity.ok().body(null);
             }
+            System.out.println(Arrays.toString(symbols.toArray()));
             ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/watchlist", new WatchListReq(symbols), String.class);
             return ResponseEntity.ok().body(response.getBody());
         } catch (Exception e) {

@@ -84,7 +84,9 @@ const classes = {
         marginBottom: '2vw',
     }
 };
-
+function randomFloat(min, max) {
+    return (Math.random() * (max - min) + min).toFixed(2);
+}
 const Home = () => {
     const [txt, setTxt] = React.useState(null);
     const [spacing, setSpacing] = React.useState(1);

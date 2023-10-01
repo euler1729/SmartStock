@@ -19,7 +19,7 @@ const DataTable = ({ data }) => {
 
     return (
         <Paper sx={{width:'100vw'}} className='center'>
-            <div><h1>Current Market Status</h1></div>
+            
             <TableContainer>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
