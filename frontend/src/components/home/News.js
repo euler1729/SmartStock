@@ -73,7 +73,7 @@ const News = () => {
         "type": "STORY",
         "uuid": "cf133c77-720c-3ab3-8786-0eac2ae3abaf"
     };
-    const [data, setData] = useState([n1, n1, n1]);
+    const [data, setData] = useState([n1, n1, n1, n1, n1]);
 
     useEffect(() => {
         const refresh_token = new Cookies().get('refresh_token');

@@ -9,13 +9,14 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import DataTable from '../Data/DataTable';
-import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, tableCellClasses } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, tableCellClasses, Button } from '@mui/material';
 import News from './News';
 import Marque from './Marque';
 import { ArrowForwardIos } from '@mui/icons-material';
 import Cookies from "universal-cookie";
 import { Link } from 'react-router-dom';
-
+import AddIcon from '@mui/icons-material/Add';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const classes = {
     root: {
@@ -194,7 +195,13 @@ const Home = () => {
                                         <TableCell style={{ borderBottom: 'none' }}>{item.symbol}</TableCell>
                                         <TableCell style={{ borderBottom: 'none' }}>{item.percent_change}%</TableCell>
                                         <TableCell style={{ borderBottom: 'none' }}>${item.current_price.toFixed(2)}</TableCell>
-
+                                        <TableCell style={{ borderBottom: 'none' }}>
+                                            <Link to={`/chart?symbol=${item.symbol}`} style={{ textDecoration: 'none' }}>
+                                                <Button>
+                                                    <AddCircleOutlineIcon />
+                                                </Button>
+                                            </Link>
+                                        </TableCell>
                                     </TableRow>
                                 )
                             })
