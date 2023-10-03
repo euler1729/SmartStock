@@ -1,4 +1,3 @@
-import './Watchlist.css'
 import React, { useEffect } from 'react'
 import DataTable from '../Data/DataTable';
 import '../market/Market.css'
@@ -15,7 +14,26 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { LineChart } from '@mui/x-charts';
 import Chart from 'react-google-charts';
-
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 function randomFloat(min, max) {
     return (Math.random() * (max - min) + min).toFixed(2);
@@ -27,18 +45,19 @@ function randomInt(min, max) {
 const rows = [
     ['AAPL', randomFloat(0, 100), randomFloat(0, 100), randomFloat(0, 100), randomFloat(0, 100), randomFloat(0, 100), randomInt(0, 1000000), randomFloat(0, 100)],
 ];
-const header = ['symbol', 'open', 'high', 'low', 'close', 'volume($)', 'change(%)', 'current price($)', 'View', 'BUY'];
+const header = ['symbol', 'open', 'high', 'low', 'close', 'volume($)', 'change(%)', 'current price($)', 'View', 'Buy'];
 
 const data = [header, rows];
 
 
-const Watchlist = () => {
+const Analytics = () => {
+
     const [table, setTable] = React.useState(data);
     const [offset, setOffset] = React.useState(0);
     const [page, setPage] = React.useState(0);
     const [variant, setVariant] = React.useState(['contained', 'outlined', 'outlined', 'outlined', 'outlined', 'outlined', 'outlined']);
     const [btnColor, setBtnColor] = React.useState([color.white, 'outlined', 'outlined', 'outlined', 'outlined', 'outlined', 'outlined']);
-    const btn = ['Datatable', 'Prediction'];
+    const btn = ['Prediction'];
     const [curBtn, setcurBtn] = React.useState(0);
     const [symbol, setSymbol] = React.useState('AAPL');
     const [day, setDay] = React.useState(30);
@@ -591,6 +610,39 @@ const Watchlist = () => {
             -467.643411791995,
         ]
     ]);
+    const chartContainerStyle = {
+        width: '800px', // Set your desired width here
+        height: '600px', // Set your desired height here
+    };
+    const line_data = {
+        labels: ['2021-10-01', '2021-10-02', '2021-10-03', '2021-10-04', '2021-10-05'],
+        datasets: [
+            {
+                label: 'AAPL',
+                data: [10, 20, 15, 30, 25],
+                borderColor: 'red',
+                fill: false,
+            },
+            {
+                label: 'GOOGL',
+                data: [5, 15, 10, 20, 10],
+                borderColor: 'blue',
+                fill: false,
+            },
+            // Add more datasets for additional lines
+        ],
+    };
+    const options = {
+        scales: {
+            x: {
+                type: 'category',
+                labels: line_data.labels,
+            },
+            y: {
+                beginAtZero: true,
+            },
+        },
+    };
 
     useEffect(() => {
         const refresh_token = new Cookies().get('refresh_token');
@@ -599,36 +651,19 @@ const Watchlist = () => {
                 'Authorization': `Bearer ${refresh_token}`
             }
         };
-
-        if (curBtn == 0) {
-            const payload = {
-                'offset': offset
-            };
-            API.get('/watchlist/get',config).then(res => {
-                console.log(res.data);
-                let rs = [];
-                res.data?.forEach((item, i) => {
-                    rs.push([item.symbol, item.open, item.high, item.low, item.close, item.volume, item.percent_change, item.current_price]);
-                })
-                setTable([header, rs])
-            }).catch(err => {
-                console.log(err);
-            });
-        } else {
-            console.log(symbol, day)
-            API.post('/data/prediction', { 'symbol': symbol, 'period': 30, 'param': 'Close' }, config).then(res => {
-                console.log(res)
-                let rs = [];
-                rs.push(keys);
-                res.data?.map((item, i) => {
-                    console.log(item)
-                    rs.push([item.ds, item.yhat, item.yhat_lower, item.yhat_upper, item.trend, item.trend_lower, item.trend_upper]);
-                })
-                setLineData(rs)
-            }).catch(err => {
-                console.log(err);
-            });
-        }
+        console.log(symbol, day)
+        API.post('/data/prediction', { 'symbol': symbol, 'period': 30, 'param': 'Close' }, config).then(res => {
+            console.log(res)
+            let rs = [];
+            rs.push(keys);
+            res.data.map((item, i) => {
+                console.log(item)
+                rs.push([item.ds, item.yhat, item.yhat_lower, item.yhat_upper, item.trend, item.trend_lower, item.trend_upper]);
+            })
+            setLineData(rs)
+        }).catch(err => {
+            console.log(err);
+        });
     }, []);
 
     function handleBtnClick(e) {
@@ -685,38 +720,36 @@ const Watchlist = () => {
             <Marque />
             <Grid container style={{ padding: '2vw', display: 'flex', flexDirection: 'row' }}>
                 <Grid item xs={12} sm={6} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                    {
-                        curBtn == 1 &&
-                        <Box sx={{ display: 'flex', flexDirection: 'row', width: 450 }} variant='outlined'>
-                            <span style={{ width: 250, fontWeight: 'bold' }}>DAYS TO PREDICT: </span>
-                            <Slider
-                                aria-label="Day"
-                                value={day}
-                                valueLabelDisplay="auto"
-                                step={30}
-                                marks
-                                min={30}
-                                max={365}
-                                style={{ marginLeft: '2vw' }}
-                                onChange={valuetext}
-                            />
-                            <FormControl fullWidth style={{ marginLeft: '1vw', width: '25vw', height: '2vh' }}>
-                                <InputLabel id="demo-simple-select-label">Symbol</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={symbol}
-                                    label="Symbol"
-                                    style={{ fontSize: '12px' }}
-                                    onChange={handleChange}
-                                >
-                                    {symbols.map((item, i) => {
-                                        return <MenuItem key={i} style={{ fontSize: '12px' }} value={item} >{item}</MenuItem>
-                                    })}
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    }
+
+                    <Box sx={{ display: 'flex', flexDirection: 'row', width: 450 }} variant='outlined'>
+                        <span style={{ width: 250, fontWeight: 'bold' }}>DAYS TO PREDICT: </span>
+                        <Slider
+                            aria-label="Day"
+                            value={day}
+                            valueLabelDisplay="auto"
+                            step={30}
+                            marks
+                            min={30}
+                            max={365}
+                            style={{ marginLeft: '2vw' }}
+                            onChange={valuetext}
+                        />
+                        <FormControl fullWidth style={{ marginLeft: '1vw', width: '25vw', height: '2vh' }}>
+                            <InputLabel id="demo-simple-select-label">Symbol</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={symbol}
+                                label="Symbol"
+                                style={{ fontSize: '12px' }}
+                                onChange={handleChange}
+                            >
+                                {symbols.map((item, i) => {
+                                    return <MenuItem key={i} style={{ fontSize: '12px' }} value={item} >{item}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Stack direction="row" spacing={2}>
@@ -731,49 +764,14 @@ const Watchlist = () => {
                 <Grid container >
 
                 </Grid>
-                {curBtn == 0 &&
-                    <Grid className='center' style={{display:'flex', flexDirection:'column'}}>
-                        <div><h1>Watchlist</h1></div>
-                        <DataTable data={table} />
-                    </Grid>
-                }
-                {
-                    curBtn == 1 &&
-                    <Grid className='center' style={{ marginTop: '5vw' }}>
-                        <Chart
-                            width={1000}
-                            height={700}
-                            chartType='LineChart'
-                            loader={<div>Loading Chart</div>}
-                            data={lineData}
-                            options={{
-                                title: 'Time vs Predictions',
-                                hAxis: {
-                                    title: 'Date',
-                                },
-                                vAxis: {
-                                    title: 'Prediction',
-                                },
-                                series: {
-                                    1: { curveType: 'function' },
-                                    2: { curveType: 'function' },
-                                    3: { curveType: 'function' },
-                                    4: { curveType: 'function' },
-                                    5: { curveType: 'function' },
-                                    6: { curveType: 'function' }
-                                },
-                                explorer: {
-                                    actions: ['dragToZoom', 'rightClickToReset'],
-                                    axis: 'horizontal',
-                                    keepInBounds: true,
-                                    maxZoomIn: 4.0
-                                }
-                            }}
-                        />
-                    </Grid>
-                }
+
+                <Grid className='center' style={{ marginTop: '5vw' }}>
+                    <div style={chartContainerStyle}>
+                        <Line data={line_data} options={options} />
+                    </div>
+                </Grid>
             </Grid>
         </div>
     )
 }
-export default Watchlist;
+export default Analytics;

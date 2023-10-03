@@ -17,6 +17,7 @@ import Cookies from "universal-cookie";
 import { Link } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const classes = {
     root: {
@@ -200,7 +201,7 @@ const Home = () => {
                                         <TableCell style={{ borderBottom: 'none' }}>
                                             <Link to={`/chart?symbol=${item.symbol}`} style={{ textDecoration: 'none' }}>
                                                 <Button>
-                                                    <AddCircleOutlineIcon />
+                                                    <VisibilityIcon />
                                                 </Button>
                                             </Link>
                                         </TableCell>

@@ -4,6 +4,7 @@ from flask_restful import Resource
 from flask import request
 import json
 from flask import jsonify
+from threading import Thread
 
 
 
@@ -26,72 +27,114 @@ symbols = [
 
 
 class stocks(Resource):
+    def __init__(self):
+        self.stock_data = []
+
+    def getStock(self, symbol):
+        ticker = yf.Ticker(symbol)
+        data = ticker.history('2d')
+        length = len(data)
+        if length==0:
+            return
+        
+
+        if data['Close'].isna().all():
+            data['Close'].fillna(0, inplace=True)
+        else:
+            data['Close'].fillna(data['Close'].mean(), inplace=True)
+
+
+        if data['Volume'].isna().all():
+            data['Volume'].fillna(0, inplace=True)
+        else:
+            data['Volume'].fillna(data['Volume'].mean(), inplace=True)
+
+
+        if data['Dividends'].isna().all():
+            data['Dividends'].fillna(0, inplace=True)
+        else:
+            data['Dividends'].fillna(data['Dividends'].mean(), inplace=True)
+
+
+        if data['Stock Splits'].isna().all():
+            data['Stock Splits'].fillna(0, inplace=True)
+        else:
+            data['Stock Splits'].fillna(data['Stock Splits'].mean(), inplace=True)
+        
+        if data['High'].isna().all():
+            data['High'].fillna(0, inplace=True)
+        else:
+            data['High'].fillna(data['High'].mean(), inplace=True)
+
+        if data['Low'].isna().all():
+            data['Low'].fillna(0, inplace=True)
+        else:
+            data['Low'].fillna(data['Low'].mean(), inplace=True)
+
+        if length==1:
+            self.stock_data.append({
+                "symbol": symbol,
+                "current_price": round(data["Close"][0], 2),
+                "price_change": round(0, 2),
+                "percent_change": round(0, 2),
+                "up": int(1),
+                "volume": int(data["Volume"][0]),
+                "dividend": int(data["Dividends"][0]),
+                "stock_split": int(data["Stock Splits"][0]),
+                "open": int(round(data["Close"][0], 2)),
+                "high": int(round(data["High"], 2)),
+                "low": int(round(data["Low"][0], 2)),
+                "close": int(round(data["Close"][0], 2))
+            })
+            return
+        
+
+        current_price = data['Close'][1] 
+        prev_price = data['Close'][0]
+        change = current_price - prev_price
+        percentage_change = (change / prev_price) * 100
+        direction = 1 if change > 0 else -1
+        volume = data['Volume'][1]
+        dividend = data['Dividends'][1]
+        stock_split = data['Stock Splits'][1]
+        openn = data['Open'][1]
+        high = data['High'][1]
+        low = data['Low'][1]
+    
+        self.stock_data.append({
+            "symbol": symbol,
+            "current_price": round(current_price, 2),
+            "price_change": round(change, 2),
+            "percent_change": round(percentage_change, 2),
+            "up": int(direction),
+            "volume": int(volume),
+            "dividend": int(dividend),
+            "stock_split": int(stock_split),
+            "open": int(round(openn, 2)),
+            "high": int(round(high, 2)),
+            "low": int(round(low, 2)),
+            "close": int(round(current_price, 2))
+        })
+
 
     def post(self):
 
         offset = int(request.json['offset'])
         
-        last = min(len(symbols), offset + 10)
-        symbol_string = ' '.join(symbols[offset:last])
+        last = min(len(symbols), offset + 15)
+        # symbol_string = ' '.join(symbols[offset:last])
         tmp_symbols = symbols[offset:last]
 
-        # print(symbol_string)
-        # print(tmp_symbols)
-
-        ticker = yf.Tickers(symbol_string)
-
-        db = ticker.history(period="2d")  # Fetch data for the last trading day
-
-        stock_data = []
-
-        
+        threads = []
         for symbol in tmp_symbols:
-            current_price = db[('Close', symbol)].iloc[-1]
-            previous_close = db[('Close', symbol)].iloc[-2]
-            change = current_price - previous_close
-            percentage_change = (change / previous_close) * 100 if previous_close != 0 else 0
-            volume = db[('Volume', symbol)].iloc[-1]
-            dividend = db[('Dividends', symbol)].iloc[-1] if ('Dividends', symbol) in db.columns else 0
-            stock_split = db[('Stock Splits', symbol)].iloc[-1] if ('Stock Splits', symbol) in db.columns else 0
-            ltp = db[('LTP', symbol)].iloc[-1] if ('LTP', symbol) in db.columns else 0
-            ycp = db[('YCP', symbol)].iloc[-1] if ('YCP', symbol) in db.columns else 0
-            trade = db[('Trade', symbol)].iloc[-1] if ('Trade', symbol) in db.columns else 0
-            value = db[('Value', symbol)].iloc[-1] if ('Value', symbol) in db.columns else 0
-            open = db[('Open', symbol)].iloc[-1] if ('Open', symbol) in db.columns else 0
-            high = db[('High', symbol)].iloc[-1] if ('High', symbol) in db.columns else 0
-            low = db[('Low', symbol)].iloc[-1] if ('Low', symbol) in db.columns else 0
-            close = db[('Close', symbol)].iloc[-1] if ('Close', symbol) in db.columns else 0
-            direction = 0
-            if change > 0:
-                direction = 1
-            elif change < 0:
-                direction = -1
+            thread = Thread(target=self.getStock, args=(symbol,))
+            thread.start()
+            threads.append(thread)
+
+        for t in threads:
+            t.join()
             
-
-            # Create a DataFrame for the current stock
-            
-            stock_data.append({
-                "symbol": symbol,
-                "current_price": round(current_price,2),
-                "price_change": round(change,2),
-                "percent_change": round(percentage_change,2),
-                "up": int(direction),
-                "volume": int(volume),
-                "dividend": int(dividend),
-                "stock_split": int(stock_split),
-                "ltp": int(round(ltp,2)),
-                "ycp": int(round(ycp,2)),
-                "trade": int(round(trade,2)),
-                "value": int(value),
-                "open": int(round(open,2)),
-                "high": int(round(high,2)),
-                "low": int(round(low,2)),
-                "close": int(round(close,2))
-            })
-
-        
-
-        return jsonify(stock_data)
+        return jsonify(self.stock_data)
 
     def get(self):
         

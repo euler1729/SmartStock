@@ -15,6 +15,7 @@ import EditProfile from './components/account/EditProfile';
 import Cookies from 'universal-cookie';
 import jwtDecode from 'jwt-decode';
 import Chart from './components/market/Chart';
+import Analytics from './components/analytics/Analytics';
 
 
 function App() {
@@ -47,6 +48,9 @@ function App() {
 
           <Route path='/chart' element={<Protected />} >
             <Route path='/chart' element={<Chart/>} />
+          </Route>
+          <Route path='/analytics' element={<Protected />} >
+            <Route path='/analytics' element={<Analytics/>} />
           </Route>
 
         </Routes>

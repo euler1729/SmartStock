@@ -3,6 +3,9 @@ import yfinance as yf
 from flask_restful import Resource
 import json
 from flask import request, jsonify
+from threading import Thread
+import numpy as np
+# from data.stocks import stocks
 
 
 symbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "JPM", "V", "NVDA", "BRK-A",
@@ -21,58 +24,141 @@ symbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "JPM", "V", "NVDA", "BRK-A",
 
 class topStocks(Resource):
 
+    def __init__(self):
+        self.stock_data = []
+        self.gainers = []
+        self.losers = []
+        self.highest_volume = []
+    
+    def getStock(self, symbol):
+        ticker = yf.Ticker(symbol)
+        data = ticker.history('2d')
+        length = len(data)
+        if length==0:
+            return
+        
+
+        if data['Close'].isna().all():
+            data['Close'].fillna(0, inplace=True)
+        else:
+            data['Close'].fillna(data['Close'].mean(), inplace=True)
+
+
+        if data['Volume'].isna().all():
+            data['Volume'].fillna(0, inplace=True)
+        else:
+            data['Volume'].fillna(data['Volume'].mean(), inplace=True)
+
+
+        if data['Dividends'].isna().all():
+            data['Dividends'].fillna(0, inplace=True)
+        else:
+            data['Dividends'].fillna(data['Dividends'].mean(), inplace=True)
+
+
+        if data['Stock Splits'].isna().all():
+            data['Stock Splits'].fillna(0, inplace=True)
+        else:
+            data['Stock Splits'].fillna(data['Stock Splits'].mean(), inplace=True)
+        
+        if data['High'].isna().all():
+            data['High'].fillna(0, inplace=True)
+        else:
+            data['High'].fillna(data['High'].mean(), inplace=True)
+
+        if data['Low'].isna().all():
+            data['Low'].fillna(0, inplace=True)
+        else:
+            data['Low'].fillna(data['Low'].mean(), inplace=True)
+
+        if length==1:
+            self.stock_data.append({
+                "symbol": symbol,
+                "current_price": round(data["Close"][0], 2),
+                "price_change": round(0, 2),
+                "percent_change": round(0, 2),
+                "up": int(1),
+                "volume": int(data["Volume"][0]),
+                "dividend": int(data["Dividends"][0]),
+                "stock_split": int(data["Stock Splits"][0]),
+                "open": int(round(data["Close"][0], 2)),
+                "high": int(round(data["High"], 2)),
+                "low": int(round(data["Low"][0], 2)),
+                "close": int(round(data["Close"][0], 2))
+            })
+            return
+        
+
+        current_price = data['Close'][1] 
+        prev_price = data['Close'][0]
+        change = current_price - prev_price
+        percentage_change = (change / prev_price) * 100
+        direction = 1 if change > 0 else -1
+        volume = data['Volume'][1]
+        dividend = data['Dividends'][1]
+        stock_split = data['Stock Splits'][1]
+        openn = data['Open'][1]
+        high = data['High'][1]
+        low = data['Low'][1]
+    
+        self.stock_data.append({
+            "symbol": symbol,
+            "current_price": round(current_price, 2),
+            "price_change": round(change, 2),
+            "percent_change": round(percentage_change, 2),
+            "up": int(direction),
+            "volume": int(volume),
+            "dividend": int(dividend),
+            "stock_split": int(stock_split),
+            "open": int(round(openn, 2)),
+            "high": int(round(high, 2)),
+            "low": int(round(low, 2)),
+            "close": int(round(current_price, 2))
+        })
+
+    def find_gainers(self):
+        self.gainers = sorted(self.stock_data, key=lambda x: x['price_change'])[-5:]
+
+    def find_losers(self):
+        self.losers = sorted(self.stock_data, key=lambda x: x['price_change'])[:5]
+
+    def find_highest_volume(self):
+        self.highest_volume = sorted(self.stock_data, key=lambda x: x['volume'])[-5:]
+
+
     def post(self):
 
-        symbol_string = ' '.join(symbols) + ''
-        ticker = yf.Tickers(symbol_string)
-
-        db = ticker.history(period="2d")  # Fetch data for the last trading day
-
-        stock_data = []
+        threads = []
         # print(db)
         # print(db.columns)
         for symbol in symbols:
+            thread = Thread(target=self.getStock, args=(symbol,))
+            thread.start()
+            threads.append(thread)
+        for i in threads:
+            i.join()
+        
+        #Create
+        gainers_thread = Thread(target=self.find_gainers)
+        losers_thread = Thread(target=self.find_losers)
+        highest_volume_thread = Thread(target=self.find_highest_volume)
 
-            current_price = db[('Close', symbol)].iloc[-1]
-            previous_close = db[('Close', symbol)].iloc[-2]
-            change = current_price - previous_close
-            percentage_change = (change / previous_close) * \
-                100 if previous_close != 0 else 0
-            volume = db[('Volume', symbol)].iloc[-1]
-            direction = 0
-            if change > 0:
-                direction = 1
-            elif change < 0:
-                direction = -1
+        #Start
+        gainers_thread.start()
+        losers_thread.start()
+        highest_volume_thread.start()
 
-            # Create a DataFrame for the current stock
-            stock_data.append({
-                "symbol": symbol,
-                "current_price": round(current_price,2),
-                "price_change": round(change,2),
-                "percent_change": round(percentage_change, 2),
-                "up": int((direction)),
-                "volume": int(round(volume)),
-            })
+        #Join
+        gainers_thread.join()
+        losers_thread.join()
+        highest_volume_thread.join()
 
-        gainers = sorted(
-            stock_data, key=lambda x: x['price_change'], reverse=True)[:5]
-
-        # Sort the stock_data list by price_change in ascending order to get losers
-        losers = sorted(
-            stock_data, key=lambda x: x['price_change'])[:5]
-
-        # Sort the stock_data list by volume in descending order to get highest volume
-        highest_volume = sorted(stock_data, key=lambda x: float(
-            x['volume'])*float(x['current_price']), reverse=True)[:5]
 
         result = [{
-            "gainers": gainers,
-            "losers": losers,
-            "highest_volume": highest_volume
+            "gainers": self.gainers,
+            "losers": self.losers,
+            "highest_volume": self.highest_volume
         }]
-
-        # js = json.dumps(result)
 
         return jsonify(result)
 
