@@ -1,5 +1,5 @@
 # SmartStock
-![image](https://github.com/euler1729/SmartStock/assets/59370985/11a81d74-13ec-4ad8-96fe-16eea541bae2)
+![image](https://github.com/euler1729/SmartStock/blob/master/banner.png)
 
 
 ![](https://img.shields.io/badge/Backend-Springboot-informational?style=flat&logoColor=6CB33E&color=6CB33E)
