@@ -27,7 +27,11 @@ logging:
   level:
     root: info
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
-    serviceUrl:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
       defaultZone: http://localhost:8761/eureka/
 

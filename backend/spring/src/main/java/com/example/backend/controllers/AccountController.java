@@ -17,5 +17,4 @@ public class AccountController {
         System.out.println(user.toString());
         return ResponseEntity.ok().body(accountService.getUser(user));
     }
-
 }

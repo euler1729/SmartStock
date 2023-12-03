@@ -41,11 +41,11 @@ public class SecurityConfig implements WebMvcConfigurer {
                         auth -> auth
                                 .requestMatchers(
                                         "/auth/**",
-                                        "/anonym/**",
                                         "/account/**",
                                         "/stock/**",
-                                        "/home/**",
                                         "/news/**"
+//                                        "/home/**",
+//                                        "/anonym/**",
                                 )
                                 .permitAll()
                                 .anyRequest()
@@ -80,7 +80,8 @@ public class SecurityConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         List<String> origins = new ArrayList<>();
         origins.add("http://localhost:3000/");
-        origins.add("http://192.168.0.106:3000/");
+        origins.add("http://192.168.0.104:3000/");
+        origins.add("http://192.168.0.103:3000/");
         CorsConfiguration config = getCorsConfiguration(origins);
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));

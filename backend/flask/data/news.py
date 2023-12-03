@@ -8,20 +8,16 @@ from flask import request, jsonify
 
 class news(Resource):
     
-        def post(self):
-            args = request.json
-            # print(args)
-            symbols = args.get('symbols')
-            ticks = yf.Tickers(symbols)
-            news = ticks.news()
-            # print(news)
-            clusters = []
-            for symbol in symbols:
-                if news[symbol]:
-                    arr = news[symbol]
-                    for x in arr:
-                        clusters.append(x)
-            # clusters.sort(key=lambda x: x['providerPublishTime'], reverse=True)
-
-            return jsonify(clusters)
+    def post(self):
+        args = request.json
+        # print(args)
+        symbols = args.get('symbols')
+        str = ' '.join(symbols)
+        print(str)
+        ticks = yf.Ticker(str)
+        news = ticks.news
+        
+        return {
+            'news': news
+        }
             

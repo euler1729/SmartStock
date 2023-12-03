@@ -10,7 +10,7 @@ class currentPrice(Resource):
         args = request.json
 
         symbol = args.get('symbol')
-
+        print(symbol)
         if symbol:
             # Create a Yahoo Finance Ticker object
             ticker = yf.Ticker(symbol)
@@ -18,7 +18,7 @@ class currentPrice(Resource):
             # Fetch historical data
             # Fetch data for the last trading day
             data = ticker.history(period="2d", interval="1d")
-            info = ticker.info
+            # info = ticker.info
             # print(info)
             if not data.empty:
                 # Get the current price
@@ -46,8 +46,10 @@ class currentPrice(Resource):
                     'percent_change': percent_change,
                     'up': direction,
                     'volume': int(volume),
-                    'name': info['longName'],
-                    'website': info['website'],
+                    # 'name': info['longName'],
+                    # 'website': info['website'],
+                    'name': symbol,
+                    'website': 'https://finance.yahoo.com/quote/' + symbol
                 }
             else:
                 return 'No historical data available for this symbol'

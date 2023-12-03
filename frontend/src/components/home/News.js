@@ -97,7 +97,7 @@ const News = () => {
                 API.get('/news/clusters', config).then(res => {
                     console.log(res);
                     if (res.status < 300) {
-                        setData(res.data);
+                        setData(res.data.news);
                         console.log(res.data)
                     } else {
                         new Cookies().remove('refresh_token');
@@ -122,8 +122,11 @@ const News = () => {
             <h2 style={{}}>Business Insight</h2>
             <Marquee pauseOnHover>
                 {
+                    data !=null &&
                     data.map((item, index) => {
+
                         return (
+                            item &&
                             <Card key={index} sx={{ maxWidth: 250, height: 350, boxShadow: `1px 1px 10px 0px ${color.blue}`, marginBottom: '2vh', margin: '1vw' }}>
                                 <CardActionArea>
                                     <div style={{ position: "relative" }}>
@@ -152,8 +155,9 @@ const News = () => {
                                         </Typography>
                                         <div style={{ display: 'flex', flexDirection: 'row'}}>
                                             {
-                                                item.relatedTickers.map((item, index) => {
+                                                'relatedTickers' in item && item.relatedTickers.map((item, index) => {
                                                     return (
+                                                        item !=null &&
                                                         <Typography key={index} variant="body2" style={{ margin: '2px', backgroundColor: `${colors[index % colors.length]}`, borderRadius: '2px', padding: '2px', color: 'white', fontSize: '10px' }}>
                                                             {item}
                                                         </Typography>

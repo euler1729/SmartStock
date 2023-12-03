@@ -74,32 +74,32 @@ class stocks(Resource):
         if length==1:
             self.stock_data.append({
                 "symbol": symbol,
-                "current_price": round(data["Close"][0], 2),
+                "current_price": round(data["Close"].iloc[0], 2),
                 "price_change": round(0, 2),
                 "percent_change": round(0, 2),
                 "up": int(1),
-                "volume": int(data["Volume"][0]),
-                "dividend": int(data["Dividends"][0]),
-                "stock_split": int(data["Stock Splits"][0]),
-                "open": int(round(data["Close"][0], 2)),
+                "volume": int(data["Volume"].iloc[0]),
+                "dividend": int(data["Dividends"].iloc[0]),
+                "stock_split": int(data["Stock Splits"].iloc[0]),
+                "open": int(round(data["Close"].iloc[0], 2)),
                 "high": int(round(data["High"], 2)),
-                "low": int(round(data["Low"][0], 2)),
-                "close": int(round(data["Close"][0], 2))
+                "low": int(round(data["Low"].iloc[0], 2)),
+                "close": int(round(data["Close"].iloc[0], 2))
             })
             return
         
 
-        current_price = data['Close'][1] 
-        prev_price = data['Close'][0]
+        current_price = data['Close'].iloc[1] 
+        prev_price = data['Close'].iloc[0]
         change = current_price - prev_price
         percentage_change = (change / prev_price) * 100
         direction = 1 if change > 0 else -1
-        volume = data['Volume'][1]
-        dividend = data['Dividends'][1]
-        stock_split = data['Stock Splits'][1]
-        openn = data['Open'][1]
-        high = data['High'][1]
-        low = data['Low'][1]
+        volume = data['Volume'].iloc[1]
+        dividend = data['Dividends'].iloc[1]
+        stock_split = data['Stock Splits'].iloc[1]
+        openn = data['Open'].iloc[1]
+        high = data['High'].iloc[1]
+        low = data['Low'].iloc[1]
     
         self.stock_data.append({
             "symbol": symbol,

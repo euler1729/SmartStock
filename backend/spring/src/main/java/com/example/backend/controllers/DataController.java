@@ -19,16 +19,18 @@ import java.util.List;
 @RequestMapping("/data")
 public class DataController {
     private final RestTemplate restTemplate;
-    private final String baseUrl = "http://flask";
+        private final String baseUrl = "http://flask";
+//    private final String baseUrl = "http://localhost:5000";
     private final ObjectMapper mapper = new ObjectMapper();
 
     @PostMapping("/candle")
     public ResponseEntity<List<Candle>> getCandle(@RequestBody CandleReq candleReq) {
 //        System.out.println(candleReq.toString());
         ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/candle", candleReq, String.class);
-        if(response.getStatusCode().is2xxSuccessful()) {
-            try{
-                List<Candle> candles = mapper.readValue(response.getBody(), new TypeReference<>() {});
+        if (response.getStatusCode().is2xxSuccessful()) {
+            try {
+                List<Candle> candles = mapper.readValue(response.getBody(), new TypeReference<>() {
+                });
                 return ResponseEntity.ok(candles);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -42,11 +44,12 @@ public class DataController {
     @PostMapping("/stocks")
     public ResponseEntity<List<Stock>> getStocks(@RequestBody StocksReq stocksReq) {
         stocksReq.setOffset("0");
-        System.out.println(stocksReq.toString());
-        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/stocks",stocksReq, String.class);
+        System.out.println(stocksReq);
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/stocks", stocksReq, String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             try {
-                List<Stock> stocks = mapper.readValue(response.getBody(), new TypeReference<>() {});
+                List<Stock> stocks = mapper.readValue(response.getBody(), new TypeReference<>() {
+                });
                 return ResponseEntity.ok(stocks);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -62,7 +65,8 @@ public class DataController {
         ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/current-price", symbol, String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             try {
-                Stock currentPrice = mapper.readValue(response.getBody(), new TypeReference<>() {});
+                Stock currentPrice = mapper.readValue(response.getBody(), new TypeReference<>() {
+                });
                 return ResponseEntity.ok(currentPrice);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -72,20 +76,21 @@ public class DataController {
         }
         return ResponseEntity.badRequest().build();
     }
+
     @GetMapping("/top-stocks")
-    public ResponseEntity<String> getTopStocks(){
-        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/top-stocks","", String.class);
-        if(response.getStatusCode().is2xxSuccessful()) {
-             return ResponseEntity.ok(response.getBody());
+    public ResponseEntity<String> getTopStocks() {
+        ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/top-stocks", "", String.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.ok(response.getBody());
         } else {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping("/prediction")
-    public ResponseEntity<String> getPrediction(@RequestBody PredictionReq req){
+    public ResponseEntity<String> getPrediction(@RequestBody PredictionReq req) {
         ResponseEntity<String> response = restTemplate.postForEntity(baseUrl + "/prediction", req, String.class);
-        if(response.getStatusCode().is2xxSuccessful()) {
+        if (response.getStatusCode().is2xxSuccessful()) {
             return ResponseEntity.ok(response.getBody());
         } else {
             return ResponseEntity.badRequest().build();

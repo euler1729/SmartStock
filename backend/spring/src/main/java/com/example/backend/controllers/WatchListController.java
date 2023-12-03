@@ -23,7 +23,7 @@ public class WatchListController {
     private final JwtService jwtService;
     private final RestTemplate restTemplate;
     private final String baseUrl = "http://flask";
-
+//    private final String baseUrl = "http://localhost:5000";
     @PostMapping("/add")
     public ResponseEntity<String> addWatchList(@NonNull HttpServletRequest request,@RequestBody WatchList watchList) {
         try {

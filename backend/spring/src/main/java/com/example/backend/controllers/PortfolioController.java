@@ -24,7 +24,8 @@ import java.util.List;
 @RequestMapping("/portfolio")
 public class PortfolioController {
     private final PortfolioRepo portfolioRepo;
-    private final String baseUrl = "http://flask";
+//    private final String baseUrl = "http://localhost:5000";
+        private final String baseUrl = "http://flask";
     private final WatchListRepo watchListRepo;
     private final JwtService jwtService;
 

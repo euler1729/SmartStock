@@ -22,6 +22,7 @@ public class NewsController {
     private final RestTemplate restTemplate;
     private final JwtService jwtService;
     private final String baseUrl = "http://flask";
+//    private final String baseUrl = "http://localhost:5000";
     private final WatchListRepo watchListRepo;
 
     @GetMapping("/clusters")
